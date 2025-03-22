@@ -69,10 +69,10 @@ const ProductPage = () => {
   // Reset product type checkboxes
   const resetTypes = () => {
     setSelectedType({
-      Laptop: false,
-      notebook: false,
-      phone: false,
-      speaker: false,
+      detergent: false,
+      soap: false,
+      cleaning: false,
+      other: false,
     });
   };
 
@@ -136,7 +136,7 @@ const ProductPage = () => {
           <div className="flex flex-col gap-2">
             <label className="font-semibold">Product Type:</label>
             <div className="grid grid-cols-2 gap-2">
-              {["Detergent", "Soap", "Cleaning", "Other"].map((type) => (
+              {["detergent", "soap", "cleaning", "other"].map((type) => (
                 <div key={type} className="flex items-center gap-2">
                   <input
                     type="checkbox"

@@ -13,7 +13,10 @@ import { FaTruck } from "react-icons/fa6";
 import { LuLogOut, LuPackage, LuUser } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/authService";
-import { signoutSuccess } from "../redux/reducers/authSlice";
+import {
+  clearAuthentication,
+  signoutSuccess,
+} from "../redux/reducers/authSlice";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { fetchUserCart, removeItemFromCart } from "../services/cartService";
@@ -54,6 +57,7 @@ const NavbarHeader = () => {
       setLoading(false);
     } catch (err) {
       console.error(err);
+      dispatch(clearAuthentication());
       setLoading(false);
     }
   };
@@ -102,45 +106,21 @@ const NavbarHeader = () => {
     <Navbar fluid className="border-b-2 shadow-lg">
       <div className="w-full lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <button className="mr-3 cursor-pointer rounded p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-              <span className="sr-only">Toggle Sidebar</span>
-              <HiMenuAlt1 className="h-6 w-6" />
-            </button>
+          <div className="flex items-center px-[10vh]">
             <Navbar.Brand href="/">
-              <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-                Soapify Shop.
+              <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
+                Soapify<span className="text-red-500 italic">Shop.</span>
               </span>
             </Navbar.Brand>
-            <form action="" className="ml-16 hidden md:block">
-              <Label htmlFor="search" className="sr-only">
-                Search
-              </Label>
-              <TextInput
-                icon={HiSearch}
-                id="search"
-                name="search"
-                placeholder="Search"
-                size={32}
-                type="search"
-                required
-              />
-            </form>
           </div>
           <div className="flex items-center lg:gap-3">
-            <div className="flex items-center">
-              <button className="cursor-pointer rounded p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:bg-gray-700 dark:focus:ring-gray-700 lg:hidden">
-                <span className="sr-only">Search</span>
-                <HiSearch className="h-6 w-6" />
-              </button>
-            </div>
             <div>
               <CartDropdown
                 cartItems={cartItems}
                 handleRemoveItem={handleRemoveItem}
               />
             </div>
-            <div className="hidden lg:block">
+            <div>
               <UserDropdown
                 handleSignout={handleSignout}
                 currentUser={currentUser}

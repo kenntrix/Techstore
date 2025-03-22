@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaCheck, FaMinus, FaPlus, FaRegHeart } from "react-icons/fa";
+import { FaCheck, FaMinus, FaPlus, FaRegHeart, FaTimes } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RingLoader } from "react-spinners";
@@ -137,6 +137,10 @@ const ProductItemPage = () => {
     }
   };
 
+  // Calculate stock progress percentage
+  const maxStock = 200; // Define a maximum stock level for the progress bar
+  const stockPercentage = Math.min((product.stock / maxStock) * 100, 100); // Ensure it doesn't exceed 100%
+
   return (
     <>
       {/* Full-screen loader */}
@@ -145,6 +149,7 @@ const ProductItemPage = () => {
           <RingLoader color="#4A90E2" size={100} />
         </div>
       )}
+
       <div className="max-w-6xl mx-auto my-10">
         <div className="flex gap-x-5">
           {/* Main Image */}
@@ -195,14 +200,33 @@ const ProductItemPage = () => {
                   ? "Out of stock"
                   : `Hurry up! Only ${product.stock} products left in stock`}
               </p>
-              <Progress progress={45} color="yellow" />
+              <Progress
+                progress={stockPercentage}
+                color={
+                  product.stock === 0
+                    ? "red"
+                    : product.stock < 50
+                    ? "yellow"
+                    : "green"
+                }
+              />
             </span>
 
             <div className="flex items-center gap-x-1 my-5">
               <h4 className="text-lg mr-3">Availability:</h4>
-              <p className="text-green-500 font-semibold">In Stock</p>
-              <span className="text-green-500">
-                <FaCheck />
+              <p
+                className={`font-semibold ${
+                  product.stock === 0 ? "text-[#ed3a3a]" : "text-green-500"
+                }`}
+              >
+                {product.stock === 0 ? "Out of Stock" : "In Stock"}
+              </p>
+              <span
+                className={`${
+                  product.stock === 0 ? "text-[#ed3a3a]" : "text-green-500"
+                }`}
+              >
+                {product.stock === 0 ? <FaTimes /> : <FaCheck />}
               </span>
             </div>
 
@@ -240,16 +264,20 @@ const ProductItemPage = () => {
             <div className="flex gap-x-4 py-4 mt-5">
               <button
                 onClick={handleAddToCart}
-                disabled={loading}
+                disabled={loading || product.stock === 0} // Disable if loading or out of stock
                 className={`uppercase rounded-lg py-3 px-6 ${
-                  loading
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  product.stock === 0
+                    ? "bg-red-200 text-red-700 font-semibold cursor-not-allowed" // Out of stock styling
+                    : loading
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed" // Loading styling
                     : success
                     ? "bg-green-500 text-white"
                     : "hover:bg-[#021639] hover:text-white border-2 border-[#021639]"
                 }`}
               >
-                {loading
+                {product.stock === 0
+                  ? "Out of Stock" // Display "Out of Stock" when no stock
+                  : loading
                   ? "Adding..."
                   : success
                   ? "Added to Cart!"
@@ -261,10 +289,14 @@ const ProductItemPage = () => {
               >
                 <button
                   onClick={handleBuyNow}
-                  disabled={loading}
-                  className="bg-[#021639] text-white hover:bg-[#ffd90c] hover:text-black uppercase font-semibold rounded-lg py-3 px-10"
+                  disabled={loading || product.stock === 0} // Disable if loading or out of stock
+                  className={`bg-[#021639] uppercase font-semibold rounded-lg py-3 px-10 ${
+                    product.stock === 0 || loading
+                      ? "bg-red-200 text-red-700 font-semibold cursor-not-allowed" // Out of stock or loading styling
+                      : "hover:bg-[#ffd90c] hover:text-black text-white"
+                  }`}
                 >
-                  Buy Now
+                  {product.stock === 0 ? "Out of Stock" : "Buy Now"}
                 </button>
               </Link>
             </div>

@@ -211,3 +211,26 @@ export const getAllUsers = async (request, response, next) => {
     next(errorHandler(500, "Error retrieving users from the database"));
   }
 };
+
+// Fetch user profile by ID
+export const getUserProfile = async (request, response, next) => {
+  try {
+    const userId = request.params.userId;
+
+    // Fetch the user by ID and exclude sensitive fields like password
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    // Return the user profile data
+    response.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    next(errorHandler(500, "Error fetching user profile"));
+  }
+};

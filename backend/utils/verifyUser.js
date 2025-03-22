@@ -10,10 +10,20 @@ export const verifyToken = (request, response, next) => {
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
+      // Handle specific JWT errors
+      if (err.name === "TokenExpiredError") {
+        return next(
+          errorHandler(401, "Your session has expired. Please login again.")
+        );
+      }
+      if (err.name === "JsonWebTokenError") {
+        return next(errorHandler(401, "Invalid token. Please login again."));
+      }
       return next(
-        errorHandler(401, "Invalid or expired token. Please login again.")
+        errorHandler(401, "An error occurred while verifying the token.")
       );
     }
+
     request.user = user;
     next();
   });

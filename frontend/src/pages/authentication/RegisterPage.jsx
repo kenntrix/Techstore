@@ -12,6 +12,7 @@ import { registerUser } from "../../services/authService";
 import { toast } from "react-toastify";
 import { HiMail } from "react-icons/hi";
 import { MdKey, MdVisibility, MdVisibilityOff } from "react-icons/md";
+import { RingLoader } from "react-spinners";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -63,6 +64,13 @@ const RegisterPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-10 lg:gap-y-12">
+      {/* Full-screen loader */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
+          <RingLoader color="#4A90E2" size={100} />
+        </div>
+      )}
+
       <Card
         horizontal
         imgSrc={CreateAccountImage}

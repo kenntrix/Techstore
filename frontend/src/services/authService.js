@@ -44,3 +44,16 @@ export const registerUser = async (formData) => {
     throw error.response?.data?.message;
   }
 };
+
+// Fetch user profile
+export const fetchUserProfile = async (userId) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/users/getUser/${userId}`, {
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Failed to fetch user profile.";
+  }
+};

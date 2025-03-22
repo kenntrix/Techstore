@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllUsers,
+  getUserProfile,
   google,
   signin,
   signout,
@@ -18,5 +19,6 @@ router.post("/google", google);
 router.post("/signout", signout);
 router.put("/update/:id", verifyToken, updateUser);
 router.get("/getUsers", verifyToken, verifyAdmin, getAllUsers);
+router.get("/getUser/:userId", verifyToken, getUserProfile);
 
 export default router;

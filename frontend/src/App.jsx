@@ -26,15 +26,15 @@ export default function App() {
         <Route path="/" element={<Homepage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/product/checkout" element={<CheckoutPage />} />
         <Route path="/product/:id" element={<ProductItemsPage />} />
         <Route path="/products" element={<ProductPage />} />
-        <Route path="/product/order-success" element={<OrderSuccessPage />} />
-        <Route path="/my-orders/orders/:id" element={<OrderDetailsPage />} />
 
         <Route element={<OnlyUserPrivateRoute />}>
           <Route path="/my-orders" element={<OrdersPage />} />
+          <Route path="/my-orders/orders/:id" element={<OrderDetailsPage />} />
+          <Route path="/product/checkout" element={<CheckoutPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/product/order-success" element={<OrderSuccessPage />} />
           <Route path="/track-orders" element={<TrackOrder />} />
           <Route path="/user-profile" element={<UserProfilePage />} />
         </Route>

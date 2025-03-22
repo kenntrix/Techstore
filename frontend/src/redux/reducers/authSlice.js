@@ -35,6 +35,11 @@ const authenticationSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    clearAuthentication: (state) => {
+      state.currentUser = null; // Clear the user's authentication data
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
@@ -46,6 +51,7 @@ export const {
   signUpSuccess,
   signUpFailure,
   signoutSuccess,
+  clearAuthentication,
 } = authenticationSlice.actions;
 
 export default authenticationSlice.reducer;
