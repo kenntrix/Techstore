@@ -6,7 +6,7 @@ import { errorHandler } from "../utils/error.js";
 export const addToCart = async (request, response, next) => {
   try {
     const { productId, quantity } = request.body;
-    const userId = request.user.id; // Extract user ID from the token
+    const authId = request.user.id; // Extract user ID from the token
 
     // Check if the product exists
     const product = await Product.findById(productId);
@@ -15,12 +15,12 @@ export const addToCart = async (request, response, next) => {
     }
 
     // Find or create the user's cart
-    let cart = await Cart.findOne({ userId });
+    let cart = await Cart.findOne({ authId });
 
     if (!cart) {
       // Create a new cart if none exists
       cart = new Cart({
-        userId,
+        authId,
         items: [{ productId, quantity }], // Initialize with the first item
       });
     } else {
@@ -54,9 +54,9 @@ export const addToCart = async (request, response, next) => {
 // Get cart by user ID
 export const getCartByUserId = async (request, response, next) => {
   try {
-    const userId = request.params.userId;
+    const authId = request.params.authId;
 
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    const cart = await Cart.findOne({ authId }).populate("items.productId");
     if (!cart) return next(errorHandler(404, "Cart not found"));
 
     // Calculate the total number of items in the cart
@@ -105,7 +105,7 @@ export const updateCartItem = async (request, response, next) => {
 export const removeItemFromCart = async (request, response, next) => {
   try {
     const { productId } = request.body;
-    const userId = request.user.id;
+    const authId = request.user.id;
 
     // Validate productId
     if (!productId) {
@@ -113,7 +113,7 @@ export const removeItemFromCart = async (request, response, next) => {
     }
 
     // Find the user's cart
-    const cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({ authId });
 
     if (!cart) {
       return next(errorHandler(404, "Cart not found"));
@@ -149,10 +149,10 @@ export const removeItemFromCart = async (request, response, next) => {
 // Clear cart
 export const clearCart = async (request, response, next) => {
   try {
-    const userId = request.params.userId;
+    const authId = request.params.authId;
     // Find the cart and update the items array to an empty array
     const cart = await Cart.findOneAndUpdate(
-      { userId }, // Match the cart by userId
+      { authId }, // Match the cart by authId
       { $set: { items: [] } }, // Set the items array to empty
       { new: true } // Return the updated cart document
     );

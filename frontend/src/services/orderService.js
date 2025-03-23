@@ -2,9 +2,9 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000";
 
-export const fetchOrdersByUserID = async (userId) => {
+export const fetchOrdersByUserID = async (authId) => {
   try {
-    const response = await axios.get(`${API_URL}/api/orders/user/${userId}`, {
+    const response = await axios.get(`${API_URL}/api/orders/user/${authId}`, {
       withCredentials: true,
     });
 

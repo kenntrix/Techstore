@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const paymentSchema = new mongoose.Schema(
   {
-    userId: {
+    authId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Auth",
       required: true,
     },
     total_price: {

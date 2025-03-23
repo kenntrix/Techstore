@@ -7,7 +7,7 @@ import stripe from "../utils/Stripe.js";
 export const createPayment = async (request, response, next) => {
   try {
     const { items, total_price } = request.body;
-    const userId = request.user.id;
+    const authId = request.user.id;
 
     // Validate input fields
     if (!items || !Array.isArray(items) || items.length === 0 || !total_price) {
@@ -54,7 +54,7 @@ export const createPayment = async (request, response, next) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents, // Amount in cents
       currency: "kes", // Use "usd" or another supported currency if needed
-      metadata: { userId },
+      metadata: { authId },
     });
 
     if (!paymentIntent || !paymentIntent.id) {
@@ -63,7 +63,7 @@ export const createPayment = async (request, response, next) => {
 
     // Create a payment record
     const payment = new Payment({
-      userId,
+      authId,
       total_price,
       payment_date: new Date(),
       payment_status: "completed",
@@ -86,7 +86,7 @@ export const createPayment = async (request, response, next) => {
 
     // Create an order
     const order = new Order({
-      userId,
+      authId,
       items: items.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,

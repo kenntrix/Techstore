@@ -1,13 +1,5 @@
-import { HiMenuAlt1, HiSearch } from "react-icons/hi";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
-import {
-  Dropdown,
-  Label,
-  TextInput,
-  Navbar,
-  Avatar,
-  Button,
-} from "flowbite-react";
+import { Dropdown, Navbar, Avatar, Button } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTruck } from "react-icons/fa6";
 import { LuLogOut, LuPackage, LuUser } from "react-icons/lu";
@@ -30,7 +22,7 @@ const NavbarHeader = () => {
   const [cartItems, setCartItems] = useState([]); // State for cart items
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false); // State for loading
-  const userId = currentUser?.user._id;
+  const authId = currentUser?.user._id;
 
   const handleSignout = async () => {
     try {
@@ -44,11 +36,11 @@ const NavbarHeader = () => {
     }
   };
 
-  const fetchCart = async (userId) => {
+  const fetchCart = async (authId) => {
     try {
       setLoading(true);
 
-      const response = await fetchUserCart(userId);
+      const response = await fetchUserCart(authId);
       if (!response.cart) {
         throw new Error("Failed to fetch cart data.");
       }
@@ -57,7 +49,15 @@ const NavbarHeader = () => {
       setLoading(false);
     } catch (err) {
       console.error(err);
-      dispatch(clearAuthentication());
+
+      // Check the error message before dispatching clearAuthentication
+      if (
+        err === "Your session has expired. Please login again." ||
+        err === "You are not logged in. Please login or register." ||
+        err === "Invalid token. Please login again."
+      ) {
+        dispatch(clearAuthentication());
+      }
       setLoading(false);
     }
   };
@@ -78,7 +78,7 @@ const NavbarHeader = () => {
         prevItems.filter((item) => item.productId !== productId)
       );
 
-      await fetchCart(userId);
+      await fetchCart(authId);
       toast.success("Item removed from cart");
 
       setLoading(false);
@@ -92,15 +92,15 @@ const NavbarHeader = () => {
   // Fetch cart data from the server
   useEffect(() => {
     const interval = setInterval(() => {
-      fetchCart(userId);
+      fetchCart(authId);
     }, 5000); // Fetch notifications every 5 seconds
 
     // Initial fetch on component mount
-    fetchCart(userId);
+    fetchCart(authId);
 
     // Cleanup interval on unmount
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [authId]);
 
   return (
     <Navbar fluid className="border-b-2 shadow-lg">

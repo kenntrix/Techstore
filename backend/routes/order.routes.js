@@ -17,7 +17,7 @@ router.get("/", getAllOrders);
 router.get("/:id", verifyToken, getOrderById);
 
 // Route to fetch orders by user ID
-router.get("/user/:userId", verifyToken, getOrdersByUserId);
+router.get("/user/:authId", verifyToken, getOrdersByUserId);
 
 // Update order status
 router.put("/:id/status", updateOrderStatus);

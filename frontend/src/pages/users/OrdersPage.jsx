@@ -8,14 +8,14 @@ const OrdersPage = () => {
   const [orders, setOrders] = useState([]); // State for storing orders
   const [loading, setLoading] = useState(true); // State for loading
   const { currentUser } = useSelector((state) => state.authentication); // Get current user
-  const userId = currentUser?.user._id; // Extract user ID
+  const authId = currentUser?.user._id; // Extract user ID
 
   // Fetch orders for the logged-in user
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await fetchOrdersByUserID(userId);
+        const response = await fetchOrdersByUserID(authId);
 
         setOrders(response.data); // Set orders in state
         setLoading(false);
@@ -26,7 +26,7 @@ const OrdersPage = () => {
     };
 
     fetchOrders();
-  }, [userId]);
+  }, [authId]);
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg my-10">

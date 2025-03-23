@@ -13,13 +13,13 @@ const CartPage = () => {
   const [loading, setLoading] = useState(false); // State for loading
   const [totalPrice, setTotalPrice] = useState(0); // State for total price
   const { currentUser } = useSelector((state) => state.authentication);
-  const userId = currentUser?.user._id;
+  const authId = currentUser?.user._id;
 
-  const fetchCart = async (userId) => {
+  const fetchCart = async (authId) => {
     try {
       setLoading(true);
 
-      const response = await fetchUserCart(userId);
+      const response = await fetchUserCart(authId);
       if (!response.cart) {
         throw new Error("Failed to fetch cart data.");
       }
@@ -56,7 +56,7 @@ const CartPage = () => {
         prevItems.filter((item) => item.productId !== productId)
       );
 
-      await fetchCart(userId);
+      await fetchCart(authId);
       toast.success("Item removed from cart");
 
       setLoading(false);
@@ -69,8 +69,8 @@ const CartPage = () => {
 
   // Fetch cart items from the server
   useEffect(() => {
-    fetchCart(userId);
-  }, [userId]);
+    fetchCart(authId);
+  }, [authId]);
 
   return (
     <div className="max-w-5xl mx-auto p-6 my-10 bg-white shadow-lg rounded-lg">

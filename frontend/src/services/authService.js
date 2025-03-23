@@ -5,7 +5,7 @@ const API_URL = "http://localhost:8000";
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/users/signin`,
+      `${API_URL}/api/auth/signin`,
       {
         email,
         password,
@@ -17,6 +17,7 @@ export const loginUser = async (email, password) => {
         },
       }
     );
+
     return response.data;
   } catch (error) {
     throw error.response?.data?.message;
@@ -26,10 +27,11 @@ export const loginUser = async (email, password) => {
 export const logoutUser = async () => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/users/signout`,
+      `${API_URL}/api/auth/signout`,
       {},
       { withCredentials: true }
     );
+
     return response.data;
   } catch (error) {
     throw error.response?.data?.message || "Error logging out.";
@@ -38,22 +40,24 @@ export const logoutUser = async () => {
 
 export const registerUser = async (formData) => {
   try {
-    const response = await axios.post(`${API_URL}/api/users/signup`, formData);
+    const response = await axios.post(`${API_URL}/api/auth/signup`, formData);
     return response.data;
   } catch (error) {
     throw error.response?.data?.message;
   }
 };
 
-// Fetch user profile
-export const fetchUserProfile = async (userId) => {
+export const updateUser = async (formData) => {
   try {
-    const response = await axios.get(`${API_URL}/api/users/getUser/${userId}`, {
+    const response = await axios.put(`${API_URL}/api/auth/update`, formData, {
       withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || "Failed to fetch user profile.";
+    throw error.response?.data?.message;
   }
 };

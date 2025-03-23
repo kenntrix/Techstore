@@ -1,14 +1,17 @@
 import Order from "../models/order.models.js";
 import { errorHandler } from "../utils/error.js";
-import Product from "../models/product.models.js";
 
 // Get all orders
 export const getAllOrders = async (request, response, next) => {
   try {
     const orders = await Order.find()
-      .populate("userId")
+      .populate("authId")
       .populate("items.productId");
-    response.json(orders);
+    response.status(200).json({
+      success: true,
+      message: "Successfully fetched all orders.",
+      orders,
+    });
   } catch (error) {
     next(errorHandler(500, "Error fetching orders"));
   }
@@ -21,7 +24,7 @@ export const getOrderById = async (request, response, next) => {
 
     // Fetch the order by ID and populate related fields
     const order = await Order.findById(orderId)
-      .populate("userId") // Populate user details
+      .populate("authId") // Populate user details
       .populate("items.productId"); // Populate product details
 
     if (!order) return next(errorHandler(404, "Order not found"));
@@ -35,11 +38,11 @@ export const getOrderById = async (request, response, next) => {
 // Get orders by user ID
 export const getOrdersByUserId = async (request, response, next) => {
   try {
-    const userId = request.params.userId;
+    const authId = request.params.authId;
 
     // Fetch all orders for the given user ID
-    const orders = await Order.find({ userId })
-      .populate("userId") // Populate user details
+    const orders = await Order.find({ authId })
+      .populate("authId") // Populate user details
       .populate("items.productId"); // Populate product details in the order items
 
     if (!orders || orders.length === 0) {

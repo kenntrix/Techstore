@@ -2,9 +2,9 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000";
 
-export const fetchUserCart = async (userId) => {
+export const fetchUserCart = async (authId) => {
   try {
-    const response = await axios.get(`${API_URL}/api/cart/${userId}`, {
+    const response = await axios.get(`${API_URL}/api/cart/${authId}`, {
       withCredentials: true,
     });
 
@@ -46,9 +46,9 @@ export const removeItemFromCart = async ({ productId }) => {
 };
 
 // Service to remove an item from the cart
-export const clearCart = async (userId) => {
+export const clearCart = async (authId) => {
   try {
-    const response = await axios.delete(`${API_URL}/api/cart/clear/${userId}`, {
+    const response = await axios.delete(`${API_URL}/api/cart/clear/${authId}`, {
       withCredentials: true, // Include cookies for authentication
     });
 

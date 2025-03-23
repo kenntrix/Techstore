@@ -1,158 +1,164 @@
-import User from "../models/user.models.js";
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
+import UserProfile from "../models/user.models.js";
 import { errorHandler } from "../utils/error.js";
+import Auth from "../models/auth.models.js";
 
-export const signup = async (request, response, next) => {
-  const { username, email, password } = request.body;
-
-  // Check if a user with the same username already exists
-  const existingUserByUsername = await User.findOne({ username });
-  if (existingUserByUsername) {
-    return next(errorHandler(400, "Username already exists"));
-  }
-
-  // Check if a user with the same email already exists
-  const existingUserByEmail = await User.findOne({ email });
-  if (existingUserByEmail) {
-    return next(errorHandler(400, "Email already exists"));
-  }
-
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-  const newUser = new User({ username, email, password: hashedPassword });
+// 1. Create User Details
+export const createUserProfile = async (request, response, next) => {
   try {
-    await newUser.save();
-    response
-      .status(201)
-      .json({ success: true, message: "User created successfully", newUser });
+    const { firstName, lastName, phoneNumber, address, city, postalCode } =
+      request.body;
+    const authId = request.user.id;
+
+    // Validate required fields
+    if (!authId) {
+      return next(errorHandler(400, "Auth ID is required"));
+    }
+
+    // Check if user details already exist for the given authId
+    const existingUserProfile = await UserProfile.findOne({ authId });
+    if (existingUserProfile) {
+      return next(
+        errorHandler(400, "User profile already exist for this user")
+      );
+    }
+
+    // Create new user details
+    const newUserProfile = new UserProfile({
+      authId,
+      firstName,
+      lastName,
+      phoneNumber,
+      address,
+      city,
+      postalCode,
+    });
+
+    const savedUserProfile = await newUserProfile.save();
+    response.status(201).json({
+      success: true,
+      message: "User profile created successfully",
+      data: savedUserProfile,
+    });
   } catch (error) {
-    next(errorHandler(500, "Error occurred signing up", error));
+    next(errorHandler(500, "Error occurred while creating user profile."));
   }
 };
 
-export const signin = async (request, response, next) => {
-  const { email, password } = request.body;
+// 2. Get User Details by User ID
+export const getUserProfileById = async (request, response, next) => {
   try {
-    const validUser = await User.findOne({ email });
-    if (!validUser) {
-      return next(errorHandler(404, "User not found"));
-    }
-    const validPassword = bcryptjs.compareSync(password, validUser.password);
-    if (!validPassword) {
-      return next(errorHandler(401, "Invalid password"));
-    }
-    const token = jwt.sign(
-      { id: validUser._id, role: validUser.role },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
+    const authId = request.params.authId;
+
+    // Find user details by userId
+    const userProfile = await UserProfile.findOne({ authId }).populate(
+      "authId",
+      "username email"
     );
-    const { password: pass, ...rest } = validUser._doc;
-    response
-      .cookie("access_token", token, { httpOnly: true })
-      .status(200)
-      .json({
-        success: true,
-        message: "User has sign in successfully",
-        user: rest,
-      });
-  } catch (error) {
-    next(errorHandler(500, "Error occurred signing in", error));
-  }
-};
 
-export const google = async (request, response, next) => {
-  try {
-    const user = await User.findOne({ email: request.body.email });
-    if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-      const { password: pass, ...rest } = user._doc;
-      response
-        .cookie("access_token", token, { httpOnly: true })
-        .status(200)
-        .json(rest);
-    } else {
-      const generatedPassword =
-        Math.random().toString(36).slice(-8) +
-        Math.random().toString(36).slice(-8);
-      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
-      const newUser = new User({
-        username:
-          request.body.name.split(" ").join("").toLowerCase() +
-          Math.random().toString(36).slice(-8),
-        email: request.body.email,
-        password: hashedPassword,
-        avatar: request.body.photo,
-      });
-      await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-      const { password: pass, ...rest } = newUser._doc;
-      response
-        .cookie("access_token", token, { httpOnly: true })
-        .status(200)
-        .json(rest);
+    if (!userProfile) {
+      return next(errorHandler(404, "User details not found"));
     }
+
+    response.status(200).json({
+      success: true,
+      message: "User details retrieved successfully",
+      data: userProfile,
+    });
   } catch (error) {
-    next(errorHandler(500, "Error occurred signing in with google"));
+    console.log(error);
+    next(
+      errorHandler(500, "Error occurred while fetching user profiles by ID")
+    );
   }
 };
 
-export const signout = (request, response, next) => {
-  try {
-    response
-      .clearCookie("access_token")
-      .status(200)
-      .json({ success: true, message: "User has been signed out" });
-  } catch (error) {
-    next(errorHandler(500, "Error signing out."));
-  }
-};
-
-export const updateUser = async (request, response, next) => {
-  const { username, email, password } = request.body;
+// 3. Update User Details
+export const updateUserProfile = async (request, response, next) => {
+  const { firstName, lastName, phoneNumber, address, city, postalCode } =
+    request.body;
+  const authId = request.user.id;
 
   // Ensure the user can only update their own account
-  if (request.user.id !== request.params.id) {
+  if (request.user.id !== authId) {
     return next(errorHandler(401, "You can only update your own account!"));
   }
 
   try {
-    // Prepare the update object
-    const updateFields = {};
+    // Step 3: Prepare update fields for the UserProfile model
+    const userProfileUpdateFields = {};
+    if (firstName) {
+      userProfileUpdateFields.firstName = firstName;
+    }
+    if (lastName) {
+      userProfileUpdateFields.lastName = lastName;
+    }
+    if (phoneNumber) {
+      userProfileUpdateFields.phoneNumber = phoneNumber;
+    }
+    if (address) {
+      userProfileUpdateFields.address = address;
+    }
+    if (city) {
+      userProfileUpdateFields.city = city;
+    }
+    if (postalCode) {
+      userProfileUpdateFields.postalCode = postalCode;
+    }
 
-    if (username) {
-      updateFields.username = username;
-    }
-    if (email) {
-      updateFields.email = email;
-    }
-    if (password) {
-      // Hash the password and add it to the updateFields object
-      updateFields.password = bcryptjs.hashSync(password, 10);
-    }
-
-    // Update the user
-    const updatedUser = await User.findByIdAndUpdate(
-      request.params.id,
-      updateFields,
-      { new: true, runValidators: true }
+    // Step 2: Update the UserProfile model
+    const updatedUserProfile = await UserProfile.findOneAndUpdate(
+      { authId }, // Correct filter to find the user profile by authId
+      { $set: userProfileUpdateFields }, // Use $set to update specific fields
+      { new: true, runValidators: true } // Return the updated document and validate input
     );
 
-    if (!updatedUser) {
-      return next(errorHandler(404, "User not found"));
+    if (!updatedUserProfile) {
+      return next(errorHandler(404, "User profile not found"));
     }
-
-    // Exclude sensitive fields from the response
-    const { password: hashedPassword, ...rest } = updatedUser._doc;
 
     response.status(200).json({
       success: true,
-      message: "User updated successfully.",
-      user: rest,
+      message: "User profile details updated successfully.",
+      userProfile: updatedUserProfile,
     });
   } catch (error) {
-    next(errorHandler(500, "Error occurred while updaing user."));
+    console.log(error);
+    next(
+      errorHandler(500, "Error occurred while updating user profile details.")
+    );
+  }
+};
+
+// 4. Delete User Details
+export const deleteUserProfile = async (request, response, next) => {
+  const authId = request.params.id;
+
+  try {
+    // Step 1: Delete the user profile
+    const deletedUserProfile = await UserProfile.findOneAndDelete({ authId });
+    if (!deletedUserProfile) {
+      return next(errorHandler(404, "User profile not found"));
+    }
+
+    // Step 2: Delete the corresponding auth record
+    const deletedAuth = await Auth.findByIdAndDelete(authId);
+    if (!deletedAuth) {
+      return next(errorHandler(404, "Auth record not found"));
+    }
+
+    // Return success response
+    response.status(200).json({
+      success: true,
+      message: "User profile and auth record deleted successfully",
+    });
+  } catch (error) {
+    next(
+      errorHandler(
+        500,
+        "Error occurred while deleting user profile and auth record."
+      )
+    );
   }
 };
 
@@ -171,8 +177,8 @@ export const getAllUsers = async (request, response, next) => {
 
     const searchTerm = request.query.searchTerm || "";
 
-    // Find users by role and search term
-    const users = await User.find({
+    // Step 1: Find auth records based on role and search term
+    const authRecords = await Auth.find({
       username: { $regex: searchTerm, $options: "i" },
       role,
     })
@@ -180,7 +186,7 @@ export const getAllUsers = async (request, response, next) => {
       .skip(skip)
       .limit(Number(limit));
 
-    if (!users.length) {
+    if (!authRecords.length) {
       return next(
         errorHandler(
           404,
@@ -189,48 +195,39 @@ export const getAllUsers = async (request, response, next) => {
       );
     }
 
-    // Remove the password field from each user object
-    const usersWithoutPassword = users.map((user) => {
-      const { password, ...userWithoutPassword } = user._doc;
-      return userWithoutPassword;
+    // Extract auth IDs for fetching user profiles
+    const authIds = authRecords.map((auth) => auth._id);
+
+    // Step 2: Fetch user profiles linked to the auth IDs
+    const userProfiles = await UserProfile.find({ authId: { $in: authIds } });
+
+    // Combine auth and user profile data
+    const usersWithProfile = authRecords.map((auth) => {
+      const userProfile = userProfiles.find(
+        (profile) => profile.authId.toString() === auth._id.toString()
+      );
+
+      const { password, ...authWithoutPassword } = auth._doc; // Remove password field
+
+      return {
+        ...authWithoutPassword,
+        profile: userProfile ? userProfile._doc : null, // Attach user profile
+      };
     });
 
     // Get the total count of users for the given criteria
-    const totalUsers = await User.countDocuments({
+    const totalUsers = await Auth.countDocuments({
       username: { $regex: searchTerm, $options: "i" },
       role,
     });
 
     response.status(200).json({
-      users: usersWithoutPassword,
+      users: usersWithProfile,
       page,
       limit,
       totalUsers,
     });
   } catch (error) {
     next(errorHandler(500, "Error retrieving users from the database"));
-  }
-};
-
-// Fetch user profile by ID
-export const getUserProfile = async (request, response, next) => {
-  try {
-    const userId = request.params.userId;
-
-    // Fetch the user by ID and exclude sensitive fields like password
-    const user = await User.findById(userId).select("-password");
-
-    if (!user) {
-      return next(errorHandler(404, "User not found"));
-    }
-
-    // Return the user profile data
-    response.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-    next(errorHandler(500, "Error fetching user profile"));
   }
 };

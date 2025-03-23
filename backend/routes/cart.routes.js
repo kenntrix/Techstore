@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/add", verifyToken, addToCart);
 
 // Get cart by user ID
-router.get("/:userId", verifyToken, getCartByUserId);
+router.get("/:authId", verifyToken, getCartByUserId);
 
 // Update cart item quantity
 router.put("/update", verifyToken, updateCartItem);
@@ -23,6 +23,6 @@ router.put("/update", verifyToken, updateCartItem);
 router.delete("/remove", verifyToken, removeItemFromCart);
 
 // Clear cart
-router.delete("/clear/:userId", verifyToken, clearCart);
+router.delete("/clear/:authId", verifyToken, clearCart);
 
 export default router;
