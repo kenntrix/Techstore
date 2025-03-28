@@ -22,6 +22,7 @@ export const uploadMultiple = async (request, response, next) => {
 export const uploadSingle = async (request, response, next) => {
   try {
     const image = request.file; // Extract the uploaded file
+    // console.log("Received files:", request.files); // Debugging
 
     if (!image) {
       return next(errorHandler(400, "No image provided"));

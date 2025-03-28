@@ -2,7 +2,7 @@ import Order from "../models/order.models.js";
 import Payment from "../models/payment.models.js";
 import Product from "../models/product.models.js";
 import { errorHandler } from "../utils/error.js";
-import stripe from "../utils/Stripe.js";
+import stripe from "../utils/stripe.js";
 
 export const createPayment = async (request, response, next) => {
   try {

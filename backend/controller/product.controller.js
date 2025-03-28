@@ -27,6 +27,7 @@ export const createProduct = async (request, response, next) => {
       product,
     });
   } catch (error) {
+    console.log(error) //debugging
     next(errorHandler(500, "Error creating product"));
   }
 };

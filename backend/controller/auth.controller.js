@@ -44,8 +44,10 @@ export const signup = async (request, response, next) => {
 
 export const signin = async (request, response, next) => {
   const { email, password } = request.body;
+
   try {
     const validUser = await Auth.findOne({ email });
+    console.log("email:", email, "password:", password); 
     if (!validUser) {
       return next(errorHandler(404, "User not found"));
     }

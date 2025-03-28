@@ -7,16 +7,16 @@ import userRoutes from "./routes/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
 import orderRoutes from "./routes/order.routes.js";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import paymentRoutes from "./routes/payment.routes.js";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import authRoutes from "./routes/auth.routes.js";
-=======
-=======
+// =======
+// =======
 
 // Load environment variables at the beginning
->>>>>>> 37fb385 (Update changes)
->>>>>>> 4f09eea (Update changes)
+// >>>>>>> 37fb385 (Update changes)
+// >>>>>>> 4f09eea (Update changes)
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -44,6 +44,8 @@ const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Enables form-urlencoded parsing
+
 app.use(
   cors({
     origin: "http://localhost:5173",
