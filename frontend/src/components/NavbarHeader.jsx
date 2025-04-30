@@ -109,7 +109,7 @@ const NavbarHeader = () => {
           <div className="flex items-center px-[10vh]">
             <Navbar.Brand href="/">
               <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
-                Soapify<span className="text-red-500 italic">Shop.</span>
+                Techstore<span className="text-red-500 italic">Shop.</span>
               </span>
             </Navbar.Brand>
           </div>

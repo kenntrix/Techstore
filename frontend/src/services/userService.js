@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:3000";
 
 // Fetch user profile
 export const fetchUserProfile = async (authId) => {

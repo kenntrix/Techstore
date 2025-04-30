@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import HeroImage from "../assets/images/products/hero-image.jpg";
+import HeroImage from "../assets/images/products/laptop.jpg";
 
 const Herosection = () => {
   return (
@@ -13,9 +13,9 @@ const Herosection = () => {
     >
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 text-white">
-        <h1 className="text-5xl font-bold mb-4">Welcome to Soapify Shop</h1>
+        <h1 className="text-5xl font-bold mb-4">Welcome to Techstore Shop</h1>
         <p className="text-xl mb-6">
-          Discover the best cleaning products for your home.
+        Discover the best Tech devices for your business.
         </p>
         <div className="flex justify-center gap-4">
           <Link to="/shop">

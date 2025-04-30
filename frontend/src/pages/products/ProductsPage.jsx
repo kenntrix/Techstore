@@ -136,7 +136,7 @@ const ProductPage = () => {
           <div className="flex flex-col gap-2">
             <label className="font-semibold">Product Type:</label>
             <div className="grid grid-cols-2 gap-2">
-              {["detergent", "soap", "cleaning", "other"].map((type) => (
+              {["charging", "laptops", "accessories", "phones"].map((type) => (
                 <div key={type} className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -181,7 +181,7 @@ const ProductPage = () => {
 
       <div className="w-3/4 px-4">
         <h3 className="text-2xl font-semibold tracking-tight mt-6">
-          Available Soap Products
+          Available Tech Products
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4">
           {products.length > 0 ? (

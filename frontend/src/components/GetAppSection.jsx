@@ -14,7 +14,7 @@ const GetAppSection = () => {
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       {/* Content */}
       <div className="relative z-10">
-        <h2 className="text-4xl font-bold mb-4">Get the Soapify App</h2>
+        <h2 className="text-4xl font-bold mb-4">Get the Techstore App</h2>
         <p className="text-lg mb-6">
           Download the app today and shop on the go. Enjoy exclusive discounts
           and seamless shopping.

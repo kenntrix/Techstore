@@ -1,31 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import DetergentImage from "../assets/images/products/detergent.jpg";
-import CleaningImage from "../assets/images/products/cleaning.jpg";
-import SoapImage from "../assets/images/products/soap.jpg";
-import OtherImage from "../assets/images/products/other.jpg";
+import ChargingImage from "../assets/images/products/charger.jpg";
+import LaptopsImage from "../assets/images/products/lap.jpg";
+import AccessoriesImage from "../assets/images/products/laptopc.jpg";
+import PhoneImage from "../assets/images/products/phone.jpg";
 
 const CategoriesSection = () => {
   const categories = [
     {
-      name: "Detergent",
-      image: DetergentImage,
-      link: "/category/detergent",
+      name: "Charging",
+      image: ChargingImage,
+      link: "/category/charging",
     },
     {
-      name: "Soap",
-      image: SoapImage,
-      link: "/category/soap",
+      name: "Laptops",
+      image: LaptopsImage,
+      link: "/category/laptops",
     },
     {
-      name: "Cleaning",
-      image: CleaningImage,
-      link: "/category/cleaning",
+      name: "Accessories",
+      image: AccessoriesImage,
+      link: "/category/accessories",
     },
     {
-      name: "Other",
-      image: OtherImage,
-      link: "/category/other",
+      name: "Phones",
+      image: PhoneImage,
+      link: "/category/phones",
     },
   ];
 

@@ -21,8 +21,8 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["detergent", "soap", "cleaning", "other"],
-      default: "other",
+      enum: ["Charging", "Laptops", "Accessories", "Phones"],
+      default: "Laptops",
     },
     images: {
       type: [String],

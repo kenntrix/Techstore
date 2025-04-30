@@ -15,7 +15,7 @@ const FooterSection = () => {
           <div className="px-10">
             <Footer.Brand href="/" src="" alt="">
               <span className="text-3xl text-gray-200 font-semibold">
-                Soapify Shop
+                Techstore Shop
               </span>
             </Footer.Brand>
           </div>
@@ -75,7 +75,7 @@ const FooterSection = () => {
         </div>
         <Footer.Divider />
         <div className="w-full sm:flex sm:items-center sm:justify-between">
-          <Footer.Copyright href="#" by="Frodenz Labs" year={2025} />
+          <Footer.Copyright href="#" by="Daktar Ken" year={2025} />
           <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
             <Footer.Icon
               href="#"

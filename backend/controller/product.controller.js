@@ -27,7 +27,6 @@ export const createProduct = async (request, response, next) => {
       product,
     });
   } catch (error) {
-    console.log(error) //debugging
     next(errorHandler(500, "Error creating product"));
   }
 };
@@ -84,6 +83,7 @@ export const getAllProducts = async (request, response, next) => {
       products,
     });
   } catch (error) {
+    console.log(error)
     next(errorHandler(500, "Failed to get all products", error));
   }
 };
