@@ -3,7 +3,7 @@ import { Dropdown, Navbar, Avatar, Button } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTruck } from "react-icons/fa6";
 import { LuLogOut, LuPackage, LuUser } from "react-icons/lu";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logoutUser } from "../services/authService";
 import {
   clearAuthentication,
@@ -17,6 +17,7 @@ import { RiDeleteBack2Line } from "react-icons/ri";
 const NavbarHeader = () => {
   const { currentUser } = useSelector((state) => state.authentication);
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const [cartItems, setCartItems] = useState([]);
   const authId = currentUser?.user._id;
@@ -36,9 +37,7 @@ const NavbarHeader = () => {
   const fetchCart = async (authId) => {
     try {
       const response = await fetchUserCart(authId);
-      if (!response.cart) {
-        throw new Error("Failed to fetch cart data.");
-      }
+      if (!response.cart) throw new Error("Failed to fetch cart data.");
       setCartItems(response.cart.items);
     } catch (err) {
       if (
@@ -54,9 +53,7 @@ const NavbarHeader = () => {
   const handleRemoveItem = async (productId) => {
     try {
       const response = await removeItemFromCart({ productId });
-      if (!response.success) {
-        throw new Error(response.message || "Failed to remove item from cart.");
-      }
+      if (!response.success) throw new Error(response.message);
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.productId !== productId)
       );
@@ -82,77 +79,76 @@ const NavbarHeader = () => {
     };
   }, [authId]);
 
+  const baseStyle = "text-gray-600 transition-all duration-200";
+  const hoverStyle = "hover:text-blue-500 hover:text-lg";
+  const activeStyle = "font-bold text-blue-700";
+
+  const navLinkClass = (path) =>
+    `${baseStyle} ${hoverStyle} ${
+      location.pathname === path ? activeStyle : ""
+    }`;
+
   return (
     <Navbar fluid className="border-b-2 shadow-lg">
       <div className="w-full lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
-          <Navbar.Brand href="/" className="px-6">
-            <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
-              Techstore <span className="text-red-500 italic">Shop.</span>
-            </span>
-          </Navbar.Brand>
-
-          {/* Responsive links */}
-          <div className="hidden md:flex items-center gap-6">
-            <NavLinks />
+          <div className="flex items-center px-[10vh]">
+            <Navbar.Brand href="/">
+              <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
+                Techstore <span className="text-red-500 italic">Shop.</span>
+              </span>
+            </Navbar.Brand>
           </div>
 
-          <div className="flex items-center gap-4">
-            <CartDropdown
-              cartItems={cartItems}
-              handleRemoveItem={handleRemoveItem}
-            />
-            <UserDropdown
-              handleSignout={handleSignout}
-              currentUser={currentUser}
-            />
+          <div className="hidden md:flex gap-6 items-center">
+            <Link to="/" className={navLinkClass("/")}>
+              Home
+            </Link>
+            <Link to="/products" className={navLinkClass("/products")}>
+              Products
+            </Link>
+            {!currentUser && (
+              <>
+                <Link to="/login" className={navLinkClass("/login")}>
+                  Sign In
+                </Link>
+                <Link to="/register" className={navLinkClass("/register")}>
+                  Register
+                </Link>
+              </>
+            )}
+            {currentUser && (
+              <>
+                <Link
+                  to="/user-profile"
+                  className={navLinkClass("/user-profile")}
+                >
+                  Profile
+                </Link>
+                <Link to="/my-orders" className={navLinkClass("/my-orders")}>
+                  My Orders
+                </Link>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center lg:gap-3">
+            <div>
+              <CartDropdown
+                cartItems={cartItems}
+                handleRemoveItem={handleRemoveItem}
+              />
+            </div>
+            <div>
+              <UserDropdown
+                handleSignout={handleSignout}
+                currentUser={currentUser}
+              />
+            </div>
           </div>
         </div>
       </div>
     </Navbar>
-  );
-};
-
-const NavLinks = () => {
-  const baseStyle = "text-gray-600 transition-all duration-200";
-  const hoverStyle = "hover:text-blue-500 hover:text-lg";
-  const activeStyle = "text-blue-700 font-bold";
-
-  return (
-    <>
-      <NavLink
-        to="/"
-        className={({ isActive }) =>
-          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
-        }
-      >
-        Home
-      </NavLink>
-      <NavLink
-        to="/products"
-        className={({ isActive }) =>
-          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
-        }
-      >
-        Products
-      </NavLink>
-      <NavLink
-        to="/cart"
-        className={({ isActive }) =>
-          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
-        }
-      >
-        Cart
-      </NavLink>
-      <NavLink
-        to="/contact"
-        className={({ isActive }) =>
-          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
-        }
-      >
-        Contact
-      </NavLink>
-    </>
   );
 };
 
@@ -169,49 +165,48 @@ const CartDropdown = ({ cartItems, handleRemoveItem }) => {
       }
       className="w-[24rem] p-3"
     >
-      {cartItems.length === 0 ? (
-        <p className="text-center text-gray-500 py-4">Your cart is empty.</p>
-      ) : (
-        cartItems.map((item, index) => {
-          const product = item.productId;
-          if (!product || !product.images || !product.name || !product.price)
-            return null;
-
-          return (
-            <Dropdown.Item
-              key={index}
-              className="flex items-center justify-between border border-gray-200 bg-white shadow-md hover:bg-gray-50"
-            >
+      {cartItems.map((item, index) => {
+        const product = item.productId;
+        if (!product || !product.images || !product.name || !product.price)
+          return null;
+        return (
+          <Dropdown.Item
+            key={index}
+            className="flex items-center justify-between border border-gray-200 bg-white shadow-md hover:bg-gray-50"
+          >
+            <div className="w-1/4 flex justify-center">
               <img
                 src={product.images[0]}
                 alt={product.name}
                 className="w-12 h-12 object-cover"
               />
-              <div className="flex-1 mx-3 text-left">
-                <h3 className="font-semibold">{product.name}</h3>
-                <p className="text-gray-500">${product.price}</p>
-              </div>
+            </div>
+            <div className="w-1/2 flex flex-col text-left">
+              <h3 className="font-semibold">{product.name}</h3>
+              <p className="text-gray-500">${product.price}</p>
+            </div>
+            <div className="w-1/4 flex justify-center">
               <span
                 onClick={() => handleRemoveItem(product._id)}
-                className="text-red-500 hover:text-red-700 cursor-pointer"
+                className="text-red-500 hover:text-red-700 focus:outline-none"
               >
                 <RiDeleteBack2Line className="text-xl" />
               </span>
-            </Dropdown.Item>
-          );
-        })
-      )}
+            </div>
+          </Dropdown.Item>
+        );
+      })}
 
       <Dropdown.Divider className="py-1" />
 
       <Dropdown.Header>
         <div className="flex justify-between">
-          <Link to={"/cart"}>
+          <Link to="/cart">
             <Button color="gray" className="px-4">
               View Cart
             </Button>
           </Link>
-          <Link to={"/product/checkout"}>
+          <Link to="/product/checkout">
             <Button className="bg-yellow-400 px-4">Check out</Button>
           </Link>
         </div>
@@ -228,7 +223,7 @@ const UserDropdown = ({ handleSignout, currentUser }) => {
       label={
         <span>
           <span className="sr-only">User menu</span>
-          <Avatar alt="User avatar" rounded size="sm" />
+          <Avatar alt="" rounded size="sm" />
         </span>
       }
       className="w-56"
@@ -248,42 +243,45 @@ const UserDropdown = ({ handleSignout, currentUser }) => {
           </>
         ) : (
           <div className="flex justify-between">
-            <Link to={"/login"}>
+            <Link to="/login">
               <Button color="gray">Sign in</Button>
             </Link>
-            <Link to={"/register"}>
-              <Button color="blue">Sign Up</Button>
+            <Link to="/register">
+              <Button color="blue">Register</Button>
             </Link>
           </div>
         )}
       </Dropdown.Header>
-
-      <Link to={"/track-orders"}>
-        <Dropdown.Item className="flex item-center px-2 py-4">
-          <FaTruck className="mx-4 h-5 w-5" />
-          Track your Order
-        </Dropdown.Item>
-      </Link>
-      <Link to={"/my-orders"}>
-        <Dropdown.Item className="flex item-center px-2 py-4">
-          <LuPackage className="mx-4 h-5 w-5" />
-          My Orders
-        </Dropdown.Item>
-      </Link>
-      <Link to={"/user-profile"}>
-        <Dropdown.Item className="flex item-center px-2 py-4">
-          <LuUser className="mx-4 h-5 w-5" />
-          My Profile
-        </Dropdown.Item>
-      </Link>
-      <Dropdown.Divider />
-      <Dropdown.Item
-        className="flex item-center px-2 py-4"
-        onClick={handleSignout}
-      >
-        <LuLogOut className="mx-4 h-5 w-5" />
-        Sign out
-      </Dropdown.Item>
+      {currentUser && (
+        <>
+          <Link to="/track-orders">
+            <Dropdown.Item className="flex item-center px-2 py-4">
+              <FaTruck className="mx-4 h-5 w-5" />
+              Track your Order
+            </Dropdown.Item>
+          </Link>
+          <Link to="/my-orders">
+            <Dropdown.Item className="flex item-center px-2 py-4">
+              <LuPackage className="mx-4 h-5 w-5" />
+              My Orders
+            </Dropdown.Item>
+          </Link>
+          <Link to="/user-profile">
+            <Dropdown.Item className="flex item-center px-2 py-4">
+              <LuUser className="mx-4 h-5 w-5" />
+              My Profile
+            </Dropdown.Item>
+          </Link>
+          <Dropdown.Divider />
+          <Dropdown.Item
+            className="flex item-center px-2 py-4"
+            onClick={handleSignout}
+          >
+            <LuLogOut className="mx-4 h-5 w-5" />
+            Sign out
+          </Dropdown.Item>
+        </>
+      )}
     </Dropdown>
   );
 };
