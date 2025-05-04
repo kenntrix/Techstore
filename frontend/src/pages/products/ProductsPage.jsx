@@ -11,10 +11,10 @@ const ProductPage = () => {
     outOfStock: false,
   });
   const [selectedType, setSelectedType] = useState({
-    detergent: false,
-    soap: false,
-    cleaning: false,
-    other: false,
+    Charging: false,
+    Laptops: false,
+    Accessories: false,
+    Phones: false,
   });
   const [sortOrder, setSortOrder] = useState("createdAt_desc");
   const [products, setProducts] = useState([]);
@@ -69,10 +69,10 @@ const ProductPage = () => {
   // Reset product type checkboxes
   const resetTypes = () => {
     setSelectedType({
-      detergent: false,
-      soap: false,
-      cleaning: false,
-      other: false,
+      Charging: false,
+      Laptops: false,
+      Accessories: false,
+      Phones: false,
     });
   };
 
@@ -136,7 +136,7 @@ const ProductPage = () => {
           <div className="flex flex-col gap-2">
             <label className="font-semibold">Product Type:</label>
             <div className="grid grid-cols-2 gap-2">
-              {["charging", "laptops", "accessories", "phones"].map((type) => (
+              {["Charging", "Laptops", "Accessories", "Phones"].map((type) => (
                 <div key={type} className="flex items-center gap-2">
                   <input
                     type="checkbox"

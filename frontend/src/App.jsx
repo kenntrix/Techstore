@@ -20,26 +20,38 @@ import OrderDetailsPage from "./pages/users/OrderDetailsPage.jsx";
 export default function App() {
   return (
     <BrowserRouter>
-      <ToastContainer />
-      <NavbarHeader />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/product/:id" element={<ProductItemsPage />} />
-        <Route path="/products" element={<ProductPage />} />
+      <div className="flex flex-col min-h-screen">
+        <ToastContainer />
+        <NavbarHeader />
 
-        <Route element={<OnlyUserPrivateRoute />}>
-          <Route path="/my-orders" element={<OrdersPage />} />
-          <Route path="/my-orders/orders/:id" element={<OrderDetailsPage />} />
-          <Route path="/product/checkout" element={<CheckoutPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/product/order-success" element={<OrderSuccessPage />} />
-          <Route path="/track-orders" element={<TrackOrder />} />
-          <Route path="/user-profile" element={<UserProfilePage />} />
-        </Route>
-      </Routes>
-      <FooterSection />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/product/:id" element={<ProductItemsPage />} />
+            <Route path="/products" element={<ProductPage />} />
+
+            <Route element={<OnlyUserPrivateRoute />}>
+              <Route path="/my-orders" element={<OrdersPage />} />
+              <Route
+                path="/my-orders/orders/:id"
+                element={<OrderDetailsPage />}
+              />
+              <Route path="/product/checkout" element={<CheckoutPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route
+                path="/product/order-success"
+                element={<OrderSuccessPage />}
+              />
+              <Route path="/track-orders" element={<TrackOrder />} />
+              <Route path="/user-profile" element={<UserProfilePage />} />
+            </Route>
+          </Routes>
+        </main>
+
+        <FooterSection />
+      </div>
     </BrowserRouter>
   );
 }

@@ -109,7 +109,7 @@ const NavbarHeader = () => {
           <div className="flex items-center px-[10vh]">
             <Navbar.Brand href="/">
               <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
-                Techstore<span className="text-red-500 italic">Shop.</span>
+                Techstore <span className="text-red-500 italic">Shop.</span>
               </span>
             </Navbar.Brand>
           </div>
@@ -147,43 +147,40 @@ const CartDropdown = ({ cartItems, handleRemoveItem }) => {
       className="w-[24rem] p-3"
     >
       {/* Cart Items */}
-      {cartItems.length === 0 ? (
-        <Dropdown.Item className="flex text-center text-lg">
-          <MdOutlineRemoveShoppingCart className="text-3xl pr-2" />
-          Your cart is empty
-        </Dropdown.Item>
-      ) : (
-        cartItems.map((item, index) => (
+      {cartItems.map((item, index) => {
+        const product = item.productId;
+
+        if (!product || !product.images || !product.name || !product.price) {
+          return null; // Skip invalid items
+        }
+
+        return (
           <Dropdown.Item
             key={index}
             className="flex items-center justify-between border border-gray-200 bg-white shadow-md hover:bg-gray-50"
           >
-            {/* Image */}
             <div className="w-1/4 flex justify-center">
               <img
-                src={item.productId.images[0]} // Display the first image
-                alt={item.productId.name}
+                src={product.images[0]}
+                alt={product.name}
                 className="w-12 h-12 object-cover"
               />
             </div>
-            {/* Name and Price */}
             <div className="w-1/2 flex flex-col text-left">
-              <h3 className="font-semibold">{item.productId.name}</h3>
-              <p className="text-gray-500">${item.productId.price}</p>
+              <h3 className="font-semibold">{product.name}</h3>
+              <p className="text-gray-500">${product.price}</p>
             </div>
-
-            {/* Delete Icon */}
             <div className="w-1/4 flex justify-center">
               <span
-                onClick={() => handleRemoveItem(item.productId._id)}
+                onClick={() => handleRemoveItem(product._id)}
                 className="text-red-500 hover:text-red-700 focus:outline-none"
               >
                 <RiDeleteBack2Line className="text-xl" />
               </span>
             </div>
           </Dropdown.Item>
-        ))
-      )}
+        );
+      })}
 
       <Dropdown.Divider className="py-1" />
 
