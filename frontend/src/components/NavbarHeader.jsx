@@ -20,6 +20,7 @@ const NavbarHeader = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [cartItems, setCartItems] = useState([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const authId = currentUser?.user._id;
 
   const handleSignout = async () => {
@@ -29,7 +30,7 @@ const NavbarHeader = () => {
       dispatch(signoutSuccess());
       navigate("/login");
     } catch (error) {
-      console.error(error); // this "uses" it
+      console.error(error);
       toast.error("An unexpected error occurred");
     }
   };
@@ -100,6 +101,7 @@ const NavbarHeader = () => {
             </Navbar.Brand>
           </div>
 
+          {/* Desktop Links */}
           <div className="hidden md:flex gap-6 items-center">
             <Link to="/" className={navLinkClass("/")}>
               Home
@@ -132,6 +134,16 @@ const NavbarHeader = () => {
             )}
           </div>
 
+          {/* Mobile Toggle */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-700 focus:outline-none text-2xl"
+            >
+              {isMobileMenuOpen ? "✖" : "☰"}
+            </button>
+          </div>
+
           <div className="flex items-center lg:gap-3">
             <div>
               <CartDropdown
@@ -147,6 +159,41 @@ const NavbarHeader = () => {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden flex flex-col gap-3 mt-3 px-4">
+            <Link to="/" className={navLinkClass("/")}>
+              Home
+            </Link>
+            <Link to="/products" className={navLinkClass("/products")}>
+              Products
+            </Link>
+            {!currentUser && (
+              <>
+                <Link to="/login" className={navLinkClass("/login")}>
+                  Sign In
+                </Link>
+                <Link to="/register" className={navLinkClass("/register")}>
+                  Register
+                </Link>
+              </>
+            )}
+            {currentUser && (
+              <>
+                <Link
+                  to="/user-profile"
+                  className={navLinkClass("/user-profile")}
+                >
+                  Profile
+                </Link>
+                <Link to="/my-orders" className={navLinkClass("/my-orders")}>
+                  My Orders
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </Navbar>
   );
