@@ -111,6 +111,9 @@ const NavbarHeader = () => {
             </Link>
             {!currentUser && (
               <>
+              <Link to="/About" className={navLinkClass("/about")}>
+                  About
+                </Link>
                 <Link to="/login" className={navLinkClass("/login")}>
                   Sign In
                 </Link>

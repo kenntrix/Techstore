@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Homepage from "./pages/Homepage.jsx";
+import About from "./pages/AboutPage.jsx";
 import LoginPage from "./pages/authentication/LoginPage.jsx";
 import RegisterPage from "./pages/authentication/RegisterPage.jsx";
 import NavbarHeader from "./components/NavbarHeader.jsx";
@@ -27,6 +28,7 @@ export default function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/about" element={<About />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/product/:id" element={<ProductItemsPage />} />
