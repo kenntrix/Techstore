@@ -3,7 +3,7 @@ import { Dropdown, Navbar, Avatar, Button } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTruck } from "react-icons/fa6";
 import { LuLogOut, LuPackage, LuUser } from "react-icons/lu";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { logoutUser } from "../services/authService";
 import {
   clearAuthentication,
@@ -13,15 +13,12 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { fetchUserCart, removeItemFromCart } from "../services/cartService";
 import { RiDeleteBack2Line } from "react-icons/ri";
-import { MdOutlineRemoveShoppingCart } from "react-icons/md";
 
 const NavbarHeader = () => {
   const { currentUser } = useSelector((state) => state.authentication);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [cartItems, setCartItems] = useState([]); // State for cart items
-  // eslint-disable-next-line no-unused-vars
-  const [loading, setLoading] = useState(false); // State for loading
+  const [cartItems, setCartItems] = useState([]);
   const authId = currentUser?.user._id;
 
   const handleSignout = async () => {
@@ -31,26 +28,19 @@ const NavbarHeader = () => {
       dispatch(signoutSuccess());
       navigate("/login");
     } catch (error) {
-      console.log(error);
-      toast.error("An error occurred while trying to log out");
+      console.error(error); // this "uses" it
+      toast.error("An unexpected error occurred");
     }
   };
 
   const fetchCart = async (authId) => {
     try {
-      setLoading(true);
-
       const response = await fetchUserCart(authId);
       if (!response.cart) {
         throw new Error("Failed to fetch cart data.");
       }
-
       setCartItems(response.cart.items);
-      setLoading(false);
     } catch (err) {
-      console.error(err);
-
-      // Check the error message before dispatching clearAuthentication
       if (
         err === "Your session has expired. Please login again." ||
         err === "You are not logged in. Please login or register." ||
@@ -58,49 +48,24 @@ const NavbarHeader = () => {
       ) {
         dispatch(clearAuthentication());
       }
-      setLoading(false);
     }
   };
 
-  // Function to handle removing an item from the cart
   const handleRemoveItem = async (productId) => {
     try {
-      setLoading(true);
-
-      // Call the backend API to remove the item
       const response = await removeItemFromCart({ productId });
       if (!response.success) {
         throw new Error(response.message || "Failed to remove item from cart.");
       }
-
-      // Update the cart items state by filtering out the removed item
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.productId !== productId)
       );
-
       await fetchCart(authId);
       toast.success("Item removed from cart");
-
-      setLoading(false);
     } catch (error) {
-      console.error("Error removing item from cart:", error);
       toast.error(error.message || "Failed to remove item from cart.");
-      setLoading(false);
     }
   };
-
-  // Fetch cart data from the server
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     fetchCart(authId);
-  //   }, 5000); // Fetch notifications every 5 seconds
-
-  //   // Initial fetch on component mount
-  //   fetchCart(authId);
-
-  //   // Cleanup interval on unmount
-  //   return () => clearInterval(interval);
-  // }, [authId]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -121,30 +86,73 @@ const NavbarHeader = () => {
     <Navbar fluid className="border-b-2 shadow-lg">
       <div className="w-full lg:px-5 lg:pl-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center px-[10vh]">
-            <Navbar.Brand href="/">
-              <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
-                Techstore <span className="text-red-500 italic">Shop.</span>
-              </span>
-            </Navbar.Brand>
+          <Navbar.Brand href="/" className="px-6">
+            <span className="self-center whitespace-nowrap text-2xl font-semibold italic">
+              Techstore <span className="text-red-500 italic">Shop.</span>
+            </span>
+          </Navbar.Brand>
+
+          {/* Responsive links */}
+          <div className="hidden md:flex items-center gap-6">
+            <NavLinks />
           </div>
-          <div className="flex items-center lg:gap-3">
-            <div>
-              <CartDropdown
-                cartItems={cartItems}
-                handleRemoveItem={handleRemoveItem}
-              />
-            </div>
-            <div>
-              <UserDropdown
-                handleSignout={handleSignout}
-                currentUser={currentUser}
-              />
-            </div>
+
+          <div className="flex items-center gap-4">
+            <CartDropdown
+              cartItems={cartItems}
+              handleRemoveItem={handleRemoveItem}
+            />
+            <UserDropdown
+              handleSignout={handleSignout}
+              currentUser={currentUser}
+            />
           </div>
         </div>
       </div>
     </Navbar>
+  );
+};
+
+const NavLinks = () => {
+  const baseStyle = "text-gray-600 transition-all duration-200";
+  const hoverStyle = "hover:text-blue-500 hover:text-lg";
+  const activeStyle = "text-blue-700 font-bold";
+
+  return (
+    <>
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
+        }
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/products"
+        className={({ isActive }) =>
+          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
+        }
+      >
+        Products
+      </NavLink>
+      <NavLink
+        to="/cart"
+        className={({ isActive }) =>
+          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
+        }
+      >
+        Cart
+      </NavLink>
+      <NavLink
+        to="/contact"
+        className={({ isActive }) =>
+          `${baseStyle} ${hoverStyle} ${isActive ? activeStyle : ""}`
+        }
+      >
+        Contact
+      </NavLink>
+    </>
   );
 };
 
@@ -161,41 +169,38 @@ const CartDropdown = ({ cartItems, handleRemoveItem }) => {
       }
       className="w-[24rem] p-3"
     >
-      {/* Cart Items */}
-      {cartItems.map((item, index) => {
-        const product = item.productId;
+      {cartItems.length === 0 ? (
+        <p className="text-center text-gray-500 py-4">Your cart is empty.</p>
+      ) : (
+        cartItems.map((item, index) => {
+          const product = item.productId;
+          if (!product || !product.images || !product.name || !product.price)
+            return null;
 
-        if (!product || !product.images || !product.name || !product.price) {
-          return null; // Skip invalid items
-        }
-
-        return (
-          <Dropdown.Item
-            key={index}
-            className="flex items-center justify-between border border-gray-200 bg-white shadow-md hover:bg-gray-50"
-          >
-            <div className="w-1/4 flex justify-center">
+          return (
+            <Dropdown.Item
+              key={index}
+              className="flex items-center justify-between border border-gray-200 bg-white shadow-md hover:bg-gray-50"
+            >
               <img
                 src={product.images[0]}
                 alt={product.name}
                 className="w-12 h-12 object-cover"
               />
-            </div>
-            <div className="w-1/2 flex flex-col text-left">
-              <h3 className="font-semibold">{product.name}</h3>
-              <p className="text-gray-500">${product.price}</p>
-            </div>
-            <div className="w-1/4 flex justify-center">
+              <div className="flex-1 mx-3 text-left">
+                <h3 className="font-semibold">{product.name}</h3>
+                <p className="text-gray-500">${product.price}</p>
+              </div>
               <span
                 onClick={() => handleRemoveItem(product._id)}
-                className="text-red-500 hover:text-red-700 focus:outline-none"
+                className="text-red-500 hover:text-red-700 cursor-pointer"
               >
                 <RiDeleteBack2Line className="text-xl" />
               </span>
-            </div>
-          </Dropdown.Item>
-        );
-      })}
+            </Dropdown.Item>
+          );
+        })
+      )}
 
       <Dropdown.Divider className="py-1" />
 
@@ -223,7 +228,7 @@ const UserDropdown = ({ handleSignout, currentUser }) => {
       label={
         <span>
           <span className="sr-only">User menu</span>
-          <Avatar alt="" rounded size="sm" />
+          <Avatar alt="User avatar" rounded size="sm" />
         </span>
       }
       className="w-56"
@@ -252,6 +257,7 @@ const UserDropdown = ({ handleSignout, currentUser }) => {
           </div>
         )}
       </Dropdown.Header>
+
       <Link to={"/track-orders"}>
         <Dropdown.Item className="flex item-center px-2 py-4">
           <FaTruck className="mx-4 h-5 w-5" />
