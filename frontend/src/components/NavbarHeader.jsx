@@ -90,16 +90,31 @@ const NavbarHeader = () => {
   };
 
   // Fetch cart data from the server
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchCart(authId);
-    }, 5000); // Fetch notifications every 5 seconds
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     fetchCart(authId);
+  //   }, 5000); // Fetch notifications every 5 seconds
 
-    // Initial fetch on component mount
+  //   // Initial fetch on component mount
+  //   fetchCart(authId);
+
+  //   // Cleanup interval on unmount
+  //   return () => clearInterval(interval);
+  // }, [authId]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchCart(authId);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     fetchCart(authId);
 
-    // Cleanup interval on unmount
-    return () => clearInterval(interval);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [authId]);
 
   return (
