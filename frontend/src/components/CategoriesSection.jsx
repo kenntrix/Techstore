@@ -43,16 +43,14 @@ const CategoriesSection = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-6">
         {categories.map((category, index) => (
           <div key={index} className="relative group overflow-hidden">
-            {/* Category Image */}
             <img
               src={category.image}
               alt={category.name}
               className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
             />
-            {/* Overlay Text */}
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <Link
-                to={category.link}
+                to={`/products?type=${encodeURIComponent(category.name)}`}
                 className="text-white text-lg font-semibold bg-yellow-500 px-4 py-2 rounded-md hover:bg-yellow-600 transition"
               >
                 Shop Now

@@ -18,7 +18,7 @@ const Herosection = () => {
         Discover the best Tech devices for your business.
         </p>
         <div className="flex justify-center gap-4">
-          <Link to="/shop">
+          <Link to="/products">
             <button className="bg-yellow-500 text-white px-6 py-2 rounded-md hover:bg-yellow-600 transition">
               Shop Now
             </button>
