@@ -35,16 +35,25 @@ const TopSellingSection = () => {
       )}
 
       <h2 className="text-4xl font-semibold text-center mb-6">Top Selling</h2>
+
+      <p className="text-center text-gray-600 max-w-3xl mx-auto mb-8 text-lg">
+        Discover our most popular products that customers love the most. These
+        top-selling items are selected based on customer purchases and
+        satisfaction — trusted by hundreds of shoppers.
+      </p>
       {topSellingProducts.length > 0 ? (
-        <div className="flex flex-col items-center">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10 px-4 py-6">
+        <div className="w-full py-6 px-2 sm:px-4 max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {topSellingProducts.slice(0, 12).map((item) => (
               <ProductCard key={item._id} item={item} />
             ))}
           </div>
-          <div>
-            <Link to={"/products"}>
-              <Button>View All Products</Button>
+
+          <div className="flex justify-center mt-6">
+            <Link to="/products">
+              <Button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-400 transition duration-300">
+                View All Products
+              </Button>
             </Link>
           </div>
         </div>

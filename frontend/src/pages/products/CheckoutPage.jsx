@@ -151,7 +151,13 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="w-1/4">
-                  <p>${(item.productId.price * item.quantity).toFixed(2)}</p>
+                  <p>
+                    Kshs.{" "}
+                    {(item.productId.price * item.quantity).toLocaleString(
+                      "en-KE",
+                      { maximumFractionDigits: 2 }
+                    )}
+                  </p>
                 </div>
               </div>
             ))}
@@ -159,15 +165,28 @@ const CheckoutPage = () => {
             <div className="flex flex-col gap-y-1 mt-4">
               <div className="flex justify-between">
                 <p>SubTotal</p>
-                <p>${subtotal.toFixed(2)}</p>
+                <p>
+                  Kshs.{" "}
+                  {subtotal.toLocaleString("en-KE", {
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
               </div>
               <div className="flex justify-between">
                 <p>Shipping</p>
-                <p>${shippingCost.toFixed(2)}</p>
+                <p>
+                  Kshs.{" "}
+                  {shippingCost.toLocaleString("en-KE", {
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
               </div>
               <div className="flex justify-between">
                 <p className="font-semibold text-lg">Total</p>
-                <p className="font-semibold text-lg">${total.toFixed(2)}</p>
+                <p className="font-semibold text-lg">
+                  Kshs.{" "}
+                  {total.toLocaleString("en-KE", { maximumFractionDigits: 2 })}
+                </p>
               </div>
             </div>
           </>

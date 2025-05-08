@@ -113,7 +113,9 @@ const CartPage = () => {
               {/* Product Details */}
               <div className="w-1/2 flex flex-col justify-center">
                 <h3 className="font-semibold">{item.productId.name}</h3>
-                <p className="text-gray-500">${item.productId.price}</p>
+                <p className="text-gray-500">
+                  Kshs. {item.productId.price.toLocaleString()}
+                </p>
                 <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
               </div>
 
@@ -131,13 +133,22 @@ const CartPage = () => {
 
           {/* Total Price */}
           <div className="mt-6 flex justify-end">
-            <p className="text-lg font-bold">Total: ${totalPrice.toFixed(2)}</p>
+            <p className="text-lg font-semibold">
+              Total Amount: Kshs.{" "}
+              {totalPrice.toLocaleString("en-KE", { maximumFractionDigits: 2 })}
+            </p>
           </div>
 
-          {/* Checkout Button */}
+          {/*Back to Shopping and Checkout Buttons */}
+
           <div className="mt-6 flex justify-end">
-            <Link to="/product/checkout">
-              <Button className="bg-blue-500 text-white px-6 py-2 rounded-md enabled:hover:bg-blue-400 transition">
+            <Link to="/products">
+              <Button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-400 transition duration-300">
+                Back to Shopping
+              </Button>
+            </Link>
+            <Link to="/product/checkout" className="ml-4">
+              <Button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-400 transition duration-300">
                 Proceed to Checkout
               </Button>
             </Link>

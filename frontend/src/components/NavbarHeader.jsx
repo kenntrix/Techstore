@@ -233,7 +233,7 @@ const CartDropdown = ({ cartItems, handleRemoveItem }) => {
             </div>
             <div className="w-1/2 flex flex-col text-left">
               <h3 className="font-semibold">{product.name}</h3>
-              <p className="text-gray-500">${product.price}</p>
+              <p className="text-gray-500">Kshs. {product.price.toLocaleString()}</p>
             </div>
             <div className="w-1/4 flex justify-center">
               <span
