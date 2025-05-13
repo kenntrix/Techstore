@@ -286,20 +286,28 @@ const CheckoutForm = ({ cartItems, total, userId }) => {
 
       {/* Card Element */}
       <div className="mb-4">
-        <label className="block mb-2 font-semibold">Card Details</label>
-        <div className="p-3 border border-gray-500 rounded-lg mt-2">
+        <label htmlFor="card-element" className="block mb-2 font-semibold">
+          Card Details
+        </label>
+        <div
+          id="card-element"
+          className="p-3 border border-gray-400 rounded-md bg-white focus-within:border-blue-500 transition-colors"
+          style={{ cursor: "text" }} // Makes it feel interactive
+        >
           <CardElement
             options={{
               style: {
                 base: {
                   fontSize: "16px",
-                  color: "#424770",
+                  color: "#32325d",
+                  fontFamily: "'Helvetica Neue', Helvetica, sans-serif",
                   "::placeholder": {
                     color: "#aab7c4",
                   },
                 },
                 invalid: {
-                  color: "#9e2146",
+                  color: "#fa755a",
+                  iconColor: "#fa755a",
                 },
               },
               hidePostalCode: true,
