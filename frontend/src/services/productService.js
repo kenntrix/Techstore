@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000";
 
-export const fetchProducts = async (filters) => {
+export const fetchProducts = async (filters = {}) => {
   try {
     let queryParams = new URLSearchParams();
 
@@ -24,10 +24,12 @@ export const fetchProducts = async (filters) => {
       `${API_URL}/api/products?${queryParams.toString()}`
     );
 
-    return response?.data.products || null;
+    return Array.isArray(response?.data?.products)
+      ? response.data.products
+      : [];
   } catch (error) {
     console.error("Error fetching products:", error);
-    throw error.response?.data?.errorMessage;
+    throw error.response?.data?.errorMessage || "Failed to fetch products.";
   }
 };
 

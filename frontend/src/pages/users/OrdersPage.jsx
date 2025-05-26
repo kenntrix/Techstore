@@ -85,7 +85,7 @@ const OrdersPage = () => {
                         </div>
                       </div>
                       <p className="text-gray-700">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        Kshs. {(item.price * item.quantity).toFixed(2)}
                       </p>
                     </li>
                   ))}
