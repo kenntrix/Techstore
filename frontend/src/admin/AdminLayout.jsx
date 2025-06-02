@@ -36,7 +36,7 @@ export default function AdminLayout() {
         } fixed inset-y-0 left-0 z-40 w-64 bg-gray-900 text-white transition-transform duration-300 ease-in-out md:translate-x-0 md:static`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold tracking-wide">Admin Panel</h2>
+          <h2 className="text-xl font-bold tracking-wide">Techstore Admin</h2>
           <button
             className="md:hidden focus:outline-none"
             onClick={toggleSidebar}
@@ -73,7 +73,7 @@ export default function AdminLayout() {
           >
             <Menu size={24} />
           </button>
-          <div className="text-xl font-semibold">E-Commerce Admin</div>
+          <div className="text-xl font-semibold">E-Commerce</div>
           <div className="flex items-center gap-4">
             <div className="hidden md:block text-gray-600 text-sm">
               admin@example.com
