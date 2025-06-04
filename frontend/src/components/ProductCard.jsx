@@ -95,7 +95,7 @@ const ProductCard = ({ item }) => {
             {truncateTitle(item.name, 5)}
           </h3>
           <p className="text-gray-700 font-bold">
-            Ksh. {Number(item.price).toLocaleString()}
+            Kshs. {Number(item.price).toLocaleString()}
           </p>
         </div>
       </Link>

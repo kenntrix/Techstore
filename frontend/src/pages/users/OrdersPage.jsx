@@ -58,7 +58,7 @@ const OrdersPage = () => {
                 Placed on: {new Date(order.createdAt).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-500">
-                Total Amount: ${order.totalAmount.toFixed(2)}
+                Total Amount: Kshs. {order.totalAmount.toFixed(2)}
               </p>
               <p className="text-sm text-gray-500">
                 Payment Status: {order.paymentStatus}

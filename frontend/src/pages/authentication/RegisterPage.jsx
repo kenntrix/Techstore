@@ -1,5 +1,5 @@
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
-import CreateAccountImage from "../../assets/images/authentication/create-account.jpg";
+import CreateAccountImage from "../../assets/images/authentication/login.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,7 +63,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-10 lg:gap-y-12">
+    <div className="flex flex-col items-center justify-center px-6 lg:h-screen lg:gap-y-12">
       {/* Full-screen loader */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">

@@ -1,5 +1,5 @@
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
-import LoginImage from "../../assets/images/authentication/login.jpg";
+import LoginImage from "../../assets/images/authentication/log.jpg";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";

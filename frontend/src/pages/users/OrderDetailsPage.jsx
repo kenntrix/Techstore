@@ -28,7 +28,7 @@ const OrderDetailsPage = () => {
   }, [id]);
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg my-10">
+    <div className="max-w-5xl mx-auto p-6 shadow-lg rounded-lg my-20 bg-gray-200">
       <h1 className="text-3xl font-bold mb-6">Order Details</h1>
 
       {/* Full-screen loader */}
@@ -51,7 +51,7 @@ const OrderDetailsPage = () => {
               Placed on: {new Date(order.createdAt).toLocaleDateString()}
             </p>
             <p className="text-sm text-gray-500">
-              Total Amount: ${order.totalAmount.toFixed(2)}
+              Total Amount: Kshs. {order.totalAmount.toFixed(2)}
             </p>
             <p className="text-sm text-gray-500">
               Payment Status: {order.paymentStatus}
@@ -59,10 +59,16 @@ const OrderDetailsPage = () => {
           </div>
 
           {/* User Details */}
-          <div className="border-b pb-4 mb-6">
+          {/* <div className="border-b pb-4 mb-6">
             <h3 className="font-semibold mb-2">User Information</h3>
             <p>Name: {order.userId.username || "N/A"}</p>
             <p>Email: {order.userId.email || "N/A"}</p>
+            
+          </div> */}
+          <div className="border-b pb-4 mb-6">
+            <h3 className="font-semibold mb-2">User Information</h3>
+            <p>Name: {order.userId?.username || "N/A"}</p>
+            <p>Email: {order.userId?.email || "N/A"}</p>
           </div>
 
           {/* Order Items */}
@@ -86,7 +92,7 @@ const OrderDetailsPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-700">
-                  Kshs. {(item.price * item.quantity).toFixed(2)}
+                    Kshs. {(item.price * item.quantity).toFixed(2)}
                   </p>
                 </li>
               ))}
