@@ -2,6 +2,7 @@ import bcryptjs from "bcryptjs";
 import UserProfile from "../models/user.models.js";
 import { errorHandler } from "../utils/error.js";
 import Auth from "../models/auth.models.js";
+import { request, response } from "express";
 
 // 1. Create User Details
 export const createUserProfile = async (request, response, next) => {
@@ -130,9 +131,10 @@ export const updateUserProfile = async (request, response, next) => {
   }
 };
 
+
 // 4. Delete User Details
 export const deleteUserProfile = async (request, response, next) => {
-  const authId = request.params.id;
+  const authId = request.user.id;
 
   try {
     // Step 1: Delete the user profile

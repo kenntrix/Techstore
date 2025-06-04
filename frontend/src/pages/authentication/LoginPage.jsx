@@ -34,7 +34,11 @@ const LoginPage = () => {
       dispatch(signInSuccess(data));
       toast.success(data.message);
 
-      navigate("/");
+      if (data.user.role === "admin") {
+        navigate("/admin"); //to admin dashboard
+      } else
+       navigate("/");  //to techstore landing page
+
     } catch (err) {
       dispatch(signInFailure(err));
       console.log(err);

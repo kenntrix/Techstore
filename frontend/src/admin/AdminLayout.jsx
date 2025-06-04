@@ -1,6 +1,7 @@
-import { Outlet, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -10,12 +11,21 @@ import {
   X,
   LogOut,
 } from "lucide-react";
+import { signUpSuccess } from "../redux/reducers/authSlice"; // adjust path if needed
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(signUpSuccess());
+    localStorage.removeItem("persist:root"); // clear persisted Redux state (if used)
+    navigate("/login");
   };
 
   const navItems = [
@@ -78,7 +88,10 @@ export default function AdminLayout() {
             <div className="hidden md:block text-gray-600 text-sm">
               admin@example.com
             </div>
-            <button className="flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 text-sm">
+            <button
+              className="flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 text-sm"
+              onClick={handleLogout}
+            >
               <LogOut size={16} />
               Logout
             </button>
