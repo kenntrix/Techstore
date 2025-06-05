@@ -16,8 +16,8 @@ const OrderSuccessPage = () => {
 
         {/* Back to Home Button */}
         <button
-          onClick={() => navigate("/dashboard")}
-          className="mt-6 bg-[#008800] text-white py-3 px-6 rounded-lg hover:bg-[#254227] font-semibold"
+          onClick={() => navigate("/")}
+          className="mt-6 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-[#254227] font-semibold"
         >
           Back to Home
         </button>

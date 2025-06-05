@@ -1,141 +1,103 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchProducts } from "../services/productService"; // <-- adjust path as needed
+import axios from "axios";
 
-export default function Products() {
+const Products = () => {
   const [products, setProducts] = useState([]);
-  const [form, setForm] = useState({ name: "", price: "", description: "" });
-  const [editingId, setEditingId] = useState(null);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Fetch products on mount
   useEffect(() => {
     loadProducts();
   }, []);
 
-  async function loadProducts() {
+  const loadProducts = async () => {
     try {
-      const data = await getProducts();
+      const data = await fetchProducts();
       setProducts(data);
-    } catch (e) {
-      setError(e.message);
+    } catch (err) {
+      console.error("Failed to load products:", err);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  // Handle form input changes
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
 
-  // Handle form submit for create/update
-  async function handleSubmit(e) {
-    e.preventDefault();
     try {
-      if (editingId) {
-        await updateProduct(editingId, form);
-        setEditingId(null);
-      } else {
-        await createProduct(form);
-      }
-      setForm({ name: "", price: "", description: "" });
-      loadProducts();
-    } catch (e) {
-      setError(e.message);
+      await axios.delete(`http://localhost:3000/api/products/${id}`);
+      setProducts((prev) => prev.filter((product) => product.id !== id));
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("Failed to delete product.");
     }
-  }
+  };
 
-  // Start editing product
-  function handleEdit(product) {
-    setEditingId(product._id);
-    setForm({
-      name: product.name,
-      price: product.price,
-      description: product.description,
-    });
-  }
-
-  // Delete product
-  async function handleDelete(id) {
-    if (!window.confirm("Are you sure?")) return;
-    try {
-      await deleteProduct(id);
-      loadProducts();
-    } catch (e) {
-      setError(e.message);
-    }
+  if (loading) {
+    return <div className="text-center mt-10 text-xl">Loading products...</div>;
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Products</h1>
-
-      {error && <p className="text-red-600 mb-2">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="mb-6 space-y-2">
-        <input
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          className="border p-2 w-full"
-          required
-        />
-        <input
-          name="price"
-          type="number"
-          placeholder="Price"
-          value={form.price}
-          onChange={handleChange}
-          className="border p-2 w-full"
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          className="border p-2 w-full"
-          required
-        />
+    <div className="min-h-screen bg-gray-100 py-10 px-6">
+      <div className="flex justify-between items-center mb-8 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold">All Products</h1>
         <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          onClick={() => navigate("/admin/products/add-product")}
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
         >
-          {editingId ? "Update" : "Add"} Product
+          + Add Product
         </button>
-      </form>
+      </div>
 
-      <table className="w-full border-collapse border">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Price</th>
-            <th className="border px-4 py-2">Description</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((p) => (
-            <tr key={p._id}>
-              <td className="border px-4 py-2">{p.name}</td>
-              <td className="border px-4 py-2">${p.price}</td>
-              <td className="border px-4 py-2">{p.description}</td>
-              <td className="border px-4 py-2 space-x-2">
-                <button
-                  onClick={() => handleEdit(p)}
-                  className="bg-yellow-400 px-2 py-1 rounded"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(p._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
+      {products.length === 0 ? (
+        <p className="text-center text-gray-500">No products found.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col"
+            >
+              <img
+                src={product.image || "/default-image.jpg"}
+                alt={product.name}
+                className="w-full h-48 object-cover"
+              />
+
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold">{product.name}</h2>
+                  <p className="text-sm text-gray-600 truncate">
+                    {product.description}
+                  </p>
+                  <div className="mt-2 text-blue-600 font-bold text-md">
+                    Kshs. {product.price}
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-between gap-2">
+                  <Link
+                    to={`/products/edit/${product.id}`}
+                    className="bg-yellow-500 text-white text-sm px-3 py-1 rounded hover:bg-yellow-600"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="bg-red-600 text-white text-sm px-3 py-1 rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default Products;

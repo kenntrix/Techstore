@@ -51,7 +51,7 @@ const OrderDetailsPage = () => {
               Placed on: {new Date(order.createdAt).toLocaleDateString()}
             </p>
             <p className="text-sm text-gray-500">
-              Total Amount: Kshs. {order.totalAmount.toFixed(2)}
+              Total Amount: Kshs. {order.totalAmount.toLocaleString()}
             </p>
             <p className="text-sm text-gray-500">
               Payment Status: {order.paymentStatus}
@@ -92,7 +92,7 @@ const OrderDetailsPage = () => {
                     </div>
                   </div>
                   <p className="text-gray-700">
-                    Kshs. {(item.price * item.quantity).toFixed(2)}
+                    Kshs. {(item.price * item.quantity).toLocaleString()}
                   </p>
                 </li>
               ))}
@@ -102,7 +102,7 @@ const OrderDetailsPage = () => {
       )}
 
       <Link to={"/my-orders"}>
-        <Button className="mt-14 w-full">Go Back</Button>
+        <Button className="bg-blue-600 mt-14 w-full">Go Back</Button>
       </Link>
     </div>
   );
