@@ -1,16 +1,46 @@
-import { useState } from "react";
-import { createProduct } from "../../services/productService";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-function ProductForm() {
+function EditProductForm() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
     stock: "",
     category: "Laptops",
-    images: [], // Initialize as empty array
+    images: [],
   });
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(`http://localhost:3000/api/products/${id}`);
+        const product = res.data;
+        setFormData({
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          stock: product.stock,
+          category: product.category,
+          images: product.images || [],
+        });
+      } catch (error) {
+        toast.error("Failed to load product data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,43 +53,51 @@ function ProductForm() {
   const handleFileUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-    formDataUpload.append("upload_preset", "your_upload_preset"); // Replace this
+    formDataUpload.append("upload_preset", "your_upload_preset");
+
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", // Replace this
+        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
         formDataUpload
       );
       const imageUrl = response.data.secure_url;
-      setFormData((prev) => ({ ...prev, images: [...prev.images, imageUrl] }));
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, imageUrl],
+      }));
     } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Image upload failed.");
+      console.error("Image upload failed:", error);
+      toast.error("Image upload failed.");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = new FormData();
-    form.append("name", formData.name);
-    form.append("description", formData.description);
-    form.append("price", formData.price);
-    form.append("stock", formData.stock);
-    form.append("category", formData.category);
-
-    formData.images.forEach((image) => {
-      form.append("images", image);
-    });
-
     try {
-      const response = await createProduct(formData);
-      alert("Success!");
-      console.log("Created:", response);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save");
+      const updatedProduct = {
+        ...formData,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock, 10),
+      };
+
+      const res = await axios.put(
+        `http://localhost:3000/api/products/${id}`,
+        updatedProduct,
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        toast.success("Product updated successfully!");
+        navigate("/admin/dashboard"); // or product list route
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+      toast.error("Failed to update product.");
     }
   };
+
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   return (
     <form
@@ -67,7 +105,7 @@ function ProductForm() {
       className="w-full sm:w-11/12 md:w-3/4 lg:w-1/2 xl:w-2/5 mx-auto p-4 space-y-6"
     >
       <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-        Add New Product
+        Edit Product
       </h2>
 
       <input
@@ -126,7 +164,7 @@ function ProductForm() {
       </select>
 
       <div className="space-y-2">
-        <label className="block font-medium">Upload Images</label>
+        <label className="block font-medium">Upload New Image</label>
         <input
           type="file"
           accept="image/*"
@@ -137,33 +175,26 @@ function ProductForm() {
           }}
           className="block w-full border rounded p-2"
         />
-        {formData.images.map((img, index) => (
-          <div key={index} className="mt-2 flex items-center space-x-2">
-            <img
-              src={img}
-              alt={`Image ${index + 1}`}
-              className="h-16 w-auto border"
-            />
-            <a
-              href={img}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 text-sm hover:underline"
-            >
-              🔗 View
-            </a>
+
+        {formData.images.length > 0 && (
+          <div className="flex flex-wrap gap-4 mt-4">
+            {formData.images.map((img, index) => (
+              <div key={index} className="relative">
+                <img src={img} alt={`Image ${index}`} className="h-20 border" />
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
 
       <button
         type="submit"
-        className="mt-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
+        className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
       >
-        Submit
+        Save Changes
       </button>
     </form>
   );
 }
 
-export default ProductForm;
+export default EditProductForm;

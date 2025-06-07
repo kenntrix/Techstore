@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchProducts } from "../services/productService"; // <-- adjust path as needed
-import axios from "axios";
+import { fetchProducts, deleteProduct } from "../services/productService"; // <-- adjust path as needed
+// import axios from "axios";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -23,15 +23,16 @@ const Products = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?"))
-      return;
+  // Delete
+  const handleDelete = async () => {
+    if (!formData._id) return alert("Cannot delete unsaved product.");
+    if (!window.confirm("Are you sure?")) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/products/${id}`);
-      setProducts((prev) => prev.filter((product) => product.id !== id));
+      await deleteProduct(formData._id);
+      alert("Product deleted.");
     } catch (err) {
-      console.error("Delete failed:", err);
+      console.error(err);
       alert("Failed to delete product.");
     }
   };
@@ -62,7 +63,7 @@ const Products = () => {
               className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col"
             >
               <img
-                src={product.image || "/default-image.jpg"}
+                src={product.images[0]}
                 alt={product.name}
                 className="w-full h-48 object-cover"
               />
@@ -74,18 +75,18 @@ const Products = () => {
                     {product.description}
                   </p>
                   <div className="mt-2 text-blue-600 font-bold text-md">
-                    Kshs. {product.price}
+                    Kshs. {product.price.toLocaleString()}
                   </div>
                 </div>
                 <div className="mt-4 flex justify-between gap-2">
                   <Link
-                    to={`/products/edit/${product.id}`}
+                    to={`/products/edit/${product._id}`}
                     className="bg-yellow-500 text-white text-sm px-3 py-1 rounded hover:bg-yellow-600"
                   >
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => handleDelete(product._id)}
                     className="bg-red-600 text-white text-sm px-3 py-1 rounded hover:bg-red-700"
                   >
                     Delete

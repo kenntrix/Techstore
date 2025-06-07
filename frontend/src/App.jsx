@@ -30,6 +30,7 @@ import Orders from "./admin/Orders.jsx";
 import Users from "./admin/Users.jsx";
 
 import AddProduct from "./admin/components/AddProduct.jsx";
+import UpdateProduct from "./admin/components/EditProduct.jsx";
 // import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute.jsx";
 
 // Layout for public and user routes
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/products/add-product" element={<AddProduct />} />
+          <Route path="/admin/update-product/:id" element={<UpdateProduct />} />
         </Route>
         {/* </Route> */}
       </Routes>

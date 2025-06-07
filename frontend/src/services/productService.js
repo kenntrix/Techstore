@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000";
 
+//Fetch all products
 export const fetchProducts = async (filters = {}) => {
   try {
     let queryParams = new URLSearchParams();
@@ -33,6 +34,7 @@ export const fetchProducts = async (filters = {}) => {
   }
 };
 
+//fetch procuct by Id
 export const fetchProductsByID = async (productID) => {
   try {
     const response = await axios.get(`${API_URL}/api/products/${productID}`);
@@ -42,4 +44,34 @@ export const fetchProductsByID = async (productID) => {
     console.error("Error fetching products:", error);
     throw error.response?.data?.errorMessage;
   }
+};
+
+// Add a new product
+export const createProduct = async (formData) => {
+  const res = await axios.post(`${API_URL}api/products/add-product`, formData, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+// Update an existing product
+export const updateProduct = async (id, formData) => {
+  const res = await axios.put(`${API_URL}api/products/update-product/${id}`, formData, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+};
+
+// Delete a product
+export const deleteProduct = async (id) => {
+  const res = await axios.delete(`${API_URL}api/products/${id}`, {
+    withCredentials: true,
+  });
+  return res.data;
 };
