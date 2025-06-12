@@ -26,7 +26,7 @@ function ProductForm() {
     formDataUpload.append("upload_preset", "your_upload_preset"); // Replace this
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", // Replace this
+        "https://api.cloudinary.com/v1_1/kenntrix/image/upload", // Replace this
         formDataUpload
       );
       const imageUrl = response.data.secure_url;

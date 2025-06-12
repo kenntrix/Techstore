@@ -27,7 +27,7 @@ export const createProduct = async (request, response, next) => {
       product,
     });
   } catch (error) {
-    next(errorHandler(500, "Error creating product"));
+    next(errorHandler(500, "Problem creating product"));
   }
 };
 
