@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../services/productService";
 import axios from "axios";
 
@@ -9,7 +10,7 @@ function ProductForm() {
     price: "",
     stock: "",
     category: "Laptops",
-    images: [], // Initialize as empty array
+    images: [], // Initialized as empty array
   });
 
   const handleChange = (e) => {
@@ -23,10 +24,10 @@ function ProductForm() {
   const handleFileUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-    formDataUpload.append("upload_preset", "techstore_upload"); // Replace this
+    formDataUpload.append("upload_preset", "techstore_upload");
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dp11cfghy/image/upload", // Replace this
+        "https://api.cloudinary.com/v1_1/dp11cfghy/image/upload",
         formDataUpload
       );
       const imageUrl = response.data.secure_url;
@@ -37,27 +38,30 @@ function ProductForm() {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = new FormData();
-    form.append("name", formData.name);
-    form.append("description", formData.description);
-    form.append("price", formData.price);
-    form.append("stock", formData.stock);
-    form.append("category", formData.category);
-
-    formData.images.forEach((image) => {
-      form.append("images", image);
-    });
+    const payload = {
+      name: formData.name,
+      description: formData.description,
+      price: formData.price,
+      stock: formData.stock,
+      category: formData.category,
+      images: formData.images, // Already cloudinary URLs
+    };
 
     try {
-      const response = await createProduct(form);
-      alert("Success!");
-      console.log("Created:", response);
+      const response = await createProduct(payload);
+      alert("Success adding the Product!");
+
+      // Redirect to admin/products page
+      navigate("/admin/products");
+
     } catch (err) {
       console.error(err);
-      alert("Failed to save");
+      alert("Failed to save Product details");
     }
   };
 

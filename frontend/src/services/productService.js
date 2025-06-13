@@ -47,11 +47,11 @@ export const fetchProductsByID = async (productID) => {
 };
 
 // Add a new product
-export const createProduct = async (formData) => {
-  const res = await axios.post(`${API_URL}api/products`, formData, {
+export const createProduct = async (productData) => {
+  const res = await axios.post(`${API_URL}/api/products/add-product`, productData, {
     withCredentials: true,
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
     },
   });
   return res.data;

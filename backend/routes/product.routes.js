@@ -18,8 +18,7 @@ router.post(
   "/add-product",
   verifyToken,
   verifyAdmin,
-  upload.array("images", 6),
-  uploadMultiple,
+  upload.none(),
   createProduct
 );
 
