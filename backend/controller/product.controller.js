@@ -5,12 +5,14 @@ import { errorHandler } from "../utils/error.js";
 // Create a new product
 export const createProduct = async (request, response, next) => {
   try {
-    const { name, description, price, stock, category } = request.body;
+    const { name, description, price, stock, category, images } = request.body;
 
     // Ensure images were uploaded
-    if (!request.images || request.images.length === 0) {
+    if (!images || (Array.isArray(images) && images.length === 0)) {
       return next(errorHandler(400, "At least one image is required"));
     }
+
+    const imageArray = typeof images === "string" ? [images] : images
 
     const product = new Product({
       name,
@@ -18,7 +20,7 @@ export const createProduct = async (request, response, next) => {
       price,
       stock,
       category,
-      images: request.images,
+      images: imageArray,
     });
     await product.save();
     response.status(201).json({
@@ -83,7 +85,7 @@ export const getAllProducts = async (request, response, next) => {
       products,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(errorHandler(500, "Failed to get all products", error));
   }
 };

@@ -23,10 +23,10 @@ function ProductForm() {
   const handleFileUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-    formDataUpload.append("upload_preset", "your_upload_preset"); // Replace this
+    formDataUpload.append("upload_preset", "techstore_upload"); // Replace this
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/kenntrix/image/upload", // Replace this
+        "https://api.cloudinary.com/v1_1/dp11cfghy/image/upload", // Replace this
         formDataUpload
       );
       const imageUrl = response.data.secure_url;
@@ -52,7 +52,7 @@ function ProductForm() {
     });
 
     try {
-      const response = await createProduct(formData);
+      const response = await createProduct(form);
       alert("Success!");
       console.log("Created:", response);
     } catch (err) {
