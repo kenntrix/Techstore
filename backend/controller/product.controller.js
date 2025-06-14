@@ -90,6 +90,7 @@ export const getAllProducts = async (request, response, next) => {
   }
 };
 
+
 // Get a single product by ID
 export const getProductById = async (request, response, next) => {
   try {
@@ -103,6 +104,7 @@ export const getProductById = async (request, response, next) => {
     next(errorHandler(500, "Error fetching product"));
   }
 };
+
 
 // Update a product
 export const updateProduct = async (request, response, next) => {
@@ -153,6 +155,7 @@ export const updateProduct = async (request, response, next) => {
     next(errorHandler(500, "Error updating product"));
   }
 };
+
 
 // Delete a product
 export const deleteProduct = async (request, response, next) => {

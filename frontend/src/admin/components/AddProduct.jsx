@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../services/productService";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function ProductForm() {
   const [formData, setFormData] = useState({
@@ -54,14 +55,13 @@ function ProductForm() {
 
     try {
       const response = await createProduct(payload);
-      alert("Success adding the Product!");
+      toast.success("Success adding the Product!");
 
       // Redirect to admin/products page
       navigate("/admin/products");
-
     } catch (err) {
       console.error(err);
-      alert("Failed to save Product details");
+      toast.error("Failed to save Product details");
     }
   };
 

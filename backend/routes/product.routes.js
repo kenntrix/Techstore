@@ -8,7 +8,6 @@ import {
 } from "../controller/product.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 import { verifyAdmin } from "../utils/verifyAdmin.js";
-import { uploadMultiple } from "../utils/uploadImage.js";
 import upload from "../utils/multer.js";
 
 const router = express.Router();
@@ -33,8 +32,7 @@ router.put(
   "/update-product/:id",
   verifyToken,
   verifyAdmin,
-  upload.array("images", 6),
-  uploadMultiple,
+  upload.none(),
   updateProduct
 );
 

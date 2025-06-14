@@ -85,19 +85,24 @@ function EditProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const updatedData = {
-        ...formData,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock, 10),
-      };
+    const updatedData = {
+      name: formData.name,
+      description: formData.description,
+      price: formData.price,
+      stock: formData.stock,
+      category: formData.category,
+      images: formData.images,
+    };
 
+    try {
       const response = await updateProduct(id, updatedData);
 
       toast.success("Product updated successfully!");
-      navigate("/admin/products"); // or /admin/dashboard if that's where you list
-    } catch (error) {
-      console.error("Update failed:", error);
+
+      navigate("/admin/products");
+      
+    } catch (err) {
+      console.error("Update failed:", err);
       toast.error("Failed to update product.");
     }
   };

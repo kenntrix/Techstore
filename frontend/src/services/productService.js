@@ -67,8 +67,8 @@ export const updateProduct = async (id, formData) => {
     `${API_URL}/api/products/update-product/${id}`,
     formData,
     {
-      withCredentials: true,
-      }
+      withCredentials: true
+    }
   );
   return res.data;
 };
