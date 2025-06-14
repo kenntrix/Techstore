@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import {
+  fetchProductsByID,
+  updateProduct,
+} from "../../services/productService";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function EditProductForm() {
   const { id } = useParams();
@@ -22,14 +26,13 @@ function EditProductForm() {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:3000/api/products/${id}`);
-        const product = res.data;
+        const product = await fetchProductsByID(id);
         setFormData({
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          stock: product.stock,
-          category: product.category,
+          name: product.name || "",
+          description: product.description || "",
+          price: product.price || "",
+          stock: product.stock || "",
+          category: product.category || "Laptops",
           images: product.images || [],
         });
       } catch (error) {
@@ -53,11 +56,11 @@ function EditProductForm() {
   const handleFileUpload = async (file) => {
     const formDataUpload = new FormData();
     formDataUpload.append("file", file);
-    formDataUpload.append("upload_preset", "your_upload_preset");
+    formDataUpload.append("upload_preset", "techstore_upload");
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/your_cloud_name/image/upload",
+        "https://api.cloudinary.com/v1_1/dp11cfghy/image/upload",
         formDataUpload
       );
       const imageUrl = response.data.secure_url;
@@ -71,26 +74,28 @@ function EditProductForm() {
     }
   };
 
+  const handleImageRemove = (index) => {
+    const updatedImages = formData.images.filter((_, i) => i !== index);
+    setFormData((prev) => ({
+      ...prev,
+      images: updatedImages,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const updatedProduct = {
+      const updatedData = {
         ...formData,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock, 10),
       };
 
-      const res = await axios.put(
-        `http://localhost:3000/api/products/${id}`,
-        updatedProduct,
-        { withCredentials: true }
-      );
+      const response = await updateProduct(id, updatedData);
 
-      if (res.status === 200) {
-        toast.success("Product updated successfully!");
-        navigate("/admin/dashboard"); // or product list route
-      }
+      toast.success("Product updated successfully!");
+      navigate("/admin/products"); // or /admin/dashboard if that's where you list
     } catch (error) {
       console.error("Update failed:", error);
       toast.error("Failed to update product.");
@@ -181,6 +186,13 @@ function EditProductForm() {
             {formData.images.map((img, index) => (
               <div key={index} className="relative">
                 <img src={img} alt={`Image ${index}`} className="h-20 border" />
+                <button
+                  type="button"
+                  onClick={() => handleImageRemove(index)}
+                  className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-2 py-0.5 text-xs"
+                >
+                  ×
+                </button>
               </div>
             ))}
           </div>

@@ -48,23 +48,28 @@ export const fetchProductsByID = async (productID) => {
 
 // Add a new product
 export const createProduct = async (productData) => {
-  const res = await axios.post(`${API_URL}/api/products/add-product`, productData, {
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await axios.post(
+    `${API_URL}/api/products/add-product`,
+    productData,
+    {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return res.data;
 };
 
 // Update an existing product
 export const updateProduct = async (id, formData) => {
-  const res = await axios.put(`${API_URL}api/products/update-product/${id}`, formData, {
-    withCredentials: true,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const res = await axios.put(
+    `${API_URL}/api/products/update-product/${id}`,
+    formData,
+    {
+      withCredentials: true,
+      }
+  );
   return res.data;
 };
 

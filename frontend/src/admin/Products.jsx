@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchProducts, deleteProduct } from "../services/productService"; // <-- adjust path as needed
-// import axios from "axios";
+import { fetchProducts, deleteProduct } from "../services/productService";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -80,7 +79,7 @@ const Products = () => {
                 </div>
                 <div className="mt-4 flex justify-between gap-2">
                   <Link
-                    to={`/products/edit/${product._id}`}
+                    to={`/admin/update-product/${product._id}`}
                     className="bg-yellow-500 text-white text-sm px-3 py-1 rounded hover:bg-yellow-600"
                   >
                     Edit

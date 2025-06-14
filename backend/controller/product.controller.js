@@ -12,7 +12,7 @@ export const createProduct = async (request, response, next) => {
       return next(errorHandler(400, "At least one image is required"));
     }
 
-    const imageArray = typeof images === "string" ? [images] : images
+    const imageArray = typeof images === "string" ? [images] : images;
 
     const product = new Product({
       name,
@@ -94,6 +94,7 @@ export const getAllProducts = async (request, response, next) => {
 export const getProductById = async (request, response, next) => {
   try {
     const productId = request.params.id;
+
     const product = await Product.findById(productId);
     if (!product) return next(errorHandler(404, "Product not found"));
 
@@ -106,11 +107,11 @@ export const getProductById = async (request, response, next) => {
 // Update a product
 export const updateProduct = async (request, response, next) => {
   try {
-    const { name, description, price, stock, category } = request.body;
+    const { name, description, price, stock, category, images } = request.body;
     const productId = request.params.id;
 
     // Ensure images were uploaded
-    if (!request.images || request.images.length === 0) {
+    if (!images || images.length === 0) {
       return next(errorHandler(400, "At least one image is required"));
     }
 
@@ -122,10 +123,12 @@ export const updateProduct = async (request, response, next) => {
     if (existingProduct.images && existingProduct.images.length > 0) {
       for (const imageUrl of existingProduct.images) {
         try {
-          // Extract the public ID from the image URL
-          const publicId = imageUrl.split("/").pop().split(".")[0];
-
-          // Delete the image from Cloudinary
+          const publicId = imageUrl
+            .split("/")
+            .slice(-1)[0]
+            .split(".")
+            .slice(0, -1)
+            .join(".");
           await cloudinary.uploader.destroy(publicId);
         } catch (error) {
           console.error(
@@ -137,7 +140,7 @@ export const updateProduct = async (request, response, next) => {
 
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { name, description, price, stock, category, images: request.images },
+      { name, description, price, stock, category, images },
       { new: true, runValidators: true }
     );
 
@@ -181,6 +184,7 @@ export const deleteProduct = async (request, response, next) => {
       message: "Product deleted successfully",
     });
   } catch (error) {
-    next(errorHandler(500, "Error deleting product"));
+    console.error("Update Product Error:", error); // See the actual error in terminal
+    next(errorHandler(500, error.message || "Error updating product"));
   }
 };

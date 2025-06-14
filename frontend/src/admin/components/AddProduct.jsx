@@ -33,7 +33,7 @@ function ProductForm() {
       const imageUrl = response.data.secure_url;
       setFormData((prev) => ({ ...prev, images: [...prev.images, imageUrl] }));
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error("Image Upload failed:", error);
       alert("Image upload failed.");
     }
   };
