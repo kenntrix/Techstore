@@ -75,7 +75,7 @@ export const updateProduct = async (id, formData) => {
 
 // Delete a product
 export const deleteProduct = async (id) => {
-  const res = await axios.delete(`${API_URL}api/products/${id}`, {
+  const res = await axios.delete(`${API_URL}/api/products/delete-product/${id}`, {
     withCredentials: true,
   });
   return res.data;

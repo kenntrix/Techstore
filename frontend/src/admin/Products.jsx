@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchProducts, deleteProduct } from "../services/productService";
+import { toast } from "react-toastify";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -16,23 +17,24 @@ const Products = () => {
       const data = await fetchProducts();
       setProducts(data);
     } catch (err) {
-      console.error("Failed to load products:", err);
+      toast.error("Failed to load products:");
     } finally {
       setLoading(false);
     }
   };
 
   // Delete
-  const handleDelete = async () => {
-    if (!formData._id) return alert("Cannot delete unsaved product.");
-    if (!window.confirm("Are you sure?")) return;
+  const handleDelete = async (productId) => {
+    if (!productId) return alert("Cannot delete unsaved product.");
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
 
     try {
-      await deleteProduct(formData._id);
-      alert("Product deleted.");
+      await deleteProduct(productId);
+      toast.success("Product deleted successfully.");
+      setProducts((prev) => prev.filter((p) => p._id !== productId));
     } catch (err) {
-      console.error(err);
-      alert("Failed to delete product.");
+      toast.error("Failed to delete product");
     }
   };
 
@@ -58,7 +60,7 @@ const Products = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {products.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col"
             >
               <img
