@@ -28,6 +28,7 @@ import AdminDashboard from "./admin/Dashboard.jsx";
 import Products from "./admin/Products.jsx";
 import Orders from "./admin/Orders.jsx";
 import Users from "./admin/Users.jsx";
+import UpdateUserProfileByAdmin from "./admin/components/EditUser.jsx";
 
 import AddProduct from "./admin/components/AddProduct.jsx";
 import UpdateProduct from "./admin/components/EditProduct.jsx";
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/users/edit-user/:id" element={<UpdateUserProfileByAdmin />} />
           <Route path="/admin/products/add-product" element={<AddProduct />} />
           <Route path="/admin/update-product/:id" element={<UpdateProduct />} />
         </Route>
