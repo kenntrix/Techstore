@@ -10,74 +10,85 @@ import {
   Bar,
 } from "recharts";
 import { DollarSign, ShoppingCart, Box, Users } from "lucide-react";
-
-const stats = [
-  {
-    title: "Total Sales",
-    value: "$12,345",
-    icon: <DollarSign className="text-green-500" />,
-  },
-  {
-    title: "Orders",
-    value: "567",
-    icon: <ShoppingCart className="text-blue-500" />,
-  },
-  {
-    title: "Products",
-    value: "89",
-    icon: <Box className="text-yellow-500" />,
-  },
-  {
-    title: "Users",
-    value: "1,234",
-    icon: <Users className="text-purple-500" />,
-  },
-];
-
-const salesData = [
-  { month: "Jan", sales: 1200, orders: 80 },
-  { month: "Feb", sales: 2100, orders: 95 },
-  { month: "Mar", sales: 800, orders: 70 },
-  { month: "Apr", sales: 1600, orders: 85 },
-  { month: "May", sales: 2400, orders: 110 },
-  { month: "Jun", sales: 1800, orders: 92 },
-];
-
-const recentOrders = [
-  { id: "#1001", customer: "John Doe", total: "$99.99", status: "Pending" },
-  { id: "#1002", customer: "Jane Smith", total: "$149.99", status: "Shipped" },
-  {
-    id: "#1003",
-    customer: "Alice Johnson",
-    total: "$89.50",
-    status: "Delivered",
-  },
-  { id: "#1004", customer: "Bob Lee", total: "$120.00", status: "Cancelled" },
-];
-
-const topProducts = [
-  { name: "Laptops", sold: 320 },
-  { name: "Charges", sold: 280 },
-  { name: "Accessories", sold: 210 },
-  { name: "Phones", sold: 180 },
-];
+import { useEffect, useState } from "react";
+import { fetchDashboardData } from "../services/dashboard";
 
 export default function AdminDashboard() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        const res = await fetchDashboardData();
+        setData(res);
+      } catch (err) {
+        console.error("Failed to fetch dashboard", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDashboard();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin w-10 h-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (!data) return <p className="text-center mt-10">No data available.</p>;
+
+  const stats = [
+    {
+      title: "Total Sales",
+      value: `Kshs. ${data.stats.totalSales.toLocaleString()}`,
+      icon: <DollarSign className="text-green-500 w-6 h-6" />,
+      color: "bg-green-100",
+    },
+    {
+      title: "Orders",
+      value: data.stats.orders,
+      icon: <ShoppingCart className="text-blue-500 w-6 h-6" />,
+      color: "bg-blue-100",
+    },
+    {
+      title: "Products",
+      value: data.stats.products,
+      icon: <Box className="text-yellow-500 w-6 h-6" />,
+      color: "bg-yellow-100",
+    },
+    {
+      title: "Users",
+      value: data.stats.users,
+      icon: <Users className="text-purple-500 w-6 h-6" />,
+      color: "bg-purple-100",
+    },
+  ];
+
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+    <div className="space-y-10 p-6 lg:p-10">
+      <h1 className="text-4xl font-bold text-gray-800 mb-4">Admin Dashboard</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-xl shadow flex items-center gap-4"
+            className={`p-5 rounded-xl shadow flex items-center gap-4 ${stat.color}`}
           >
-            <div className="bg-gray-100 p-3 rounded-full">{stat.icon}</div>
+            <div className="bg-white p-3 rounded-full shadow-md">
+              {stat.icon}
+            </div>
             <div>
-              <h4 className="text-sm text-gray-500">{stat.title}</h4>
-              <p className="text-2xl font-semibold">{stat.value}</p>
+              <h4 className="text-sm text-gray-600 uppercase tracking-wide">
+                {stat.title}
+              </h4>
+              <p className="text-2xl font-semibold text-gray-900">
+                {stat.value}
+              </p>
             </div>
           </div>
         ))}
@@ -90,16 +101,16 @@ export default function AdminDashboard() {
             Sales Trend
           </h3>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={salesData}>
+            <LineChart data={data.salesData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
+              <XAxis dataKey="month" className="text-xs" />
+              <YAxis className="text-xs" />
               <Tooltip />
               <Line
                 type="monotone"
                 dataKey="sales"
                 stroke="#4F46E5"
-                strokeWidth={2}
+                strokeWidth={3}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -110,26 +121,25 @@ export default function AdminDashboard() {
             Orders Overview
           </h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={salesData}>
+            <BarChart data={data.salesData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
+              <XAxis dataKey="month" className="text-xs" />
+              <YAxis className="text-xs" />
               <Tooltip />
-              <Bar dataKey="orders" fill="#10B981" />
+              <Bar dataKey="orders" fill="#10B981" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Recent Orders & Top Products */}
+      {/* Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Orders */}
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-6 rounded-xl shadow overflow-x-auto">
           <h3 className="text-lg font-semibold text-gray-700 mb-4">
             Recent Orders
           </h3>
           <table className="w-full text-sm text-left text-gray-600">
-            <thead>
+            <thead className="text-xs text-gray-500 uppercase">
               <tr>
                 <th className="pb-2">Order ID</th>
                 <th className="pb-2">Customer</th>
@@ -138,11 +148,14 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody>
-              {recentOrders.map((order, i) => (
-                <tr key={i} className="border-t">
-                  <td className="py-2">{order.id}</td>
+              {data.recentOrders.map((order, i) => (
+                <tr
+                  key={i}
+                  className="border-t hover:bg-gray-50 transition-all"
+                >
+                  <td className="py-2 font-medium">{order.id}</td>
                   <td>{order.customer}</td>
-                  <td>{order.total}</td>
+                  <td>Kshs. {(Number(order.total) || 0).toFixed(2)}</td>
                   <td>
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -164,16 +177,15 @@ export default function AdminDashboard() {
           </table>
         </div>
 
-        {/* Top Products */}
         <div className="bg-white p-6 rounded-xl shadow">
           <h3 className="text-lg font-semibold text-gray-700 mb-4">
             Top Products
           </h3>
-          <ul className="space-y-2">
-            {topProducts.map((product, i) => (
+          <ul className="space-y-3">
+            {data.topProducts.map((product, i) => (
               <li
                 key={i}
-                className="flex justify-between text-sm text-gray-700 border-b pb-2"
+                className="flex justify-between items-center text-sm text-gray-700 border-b pb-2"
               >
                 <span>{product.name}</span>
                 <span className="font-semibold">{product.sold} sold</span>

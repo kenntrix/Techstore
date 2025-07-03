@@ -11,6 +11,7 @@ import orderRoutes from "./routes/order.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 // <<<<<<< HEAD
 import authRoutes from "./routes/auth.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js"
 // =======
 // =======
 
@@ -60,6 +61,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/admin", dashboardRoutes);
 
 // Middleware for handling errors
 app.use((error, request, response, next) => {

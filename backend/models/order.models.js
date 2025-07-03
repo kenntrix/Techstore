@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema(
     authId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Auth",
-      reuired: true,
+      required: true,
     },
     items: [
       {

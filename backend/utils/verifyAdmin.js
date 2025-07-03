@@ -3,7 +3,7 @@ import { errorHandler } from "./error.js";
 // Middleware: Check if user is an admin
 export const verifyAdmin = async (request, response, next) => {
   try {
-    const user = request.user;
+    const user = request.session.user;
 
     // Check if the user exists and is an admin
     if (!user || user.role !== "admin") {
