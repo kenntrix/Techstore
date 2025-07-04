@@ -5,6 +5,7 @@ import { verifyToken } from "../utils/verifyUser.js";
 
 const router = express.Router();
 
-router.get("/dashboard", getDashboardStats);
+router.get("/dashboard", verifyToken, getDashboardStats);
+// router.get("/dashboard", verifyToken, verifyAdmin, getDashboardStats);
 
 export default router;

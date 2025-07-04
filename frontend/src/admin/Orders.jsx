@@ -1,62 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { toast } from "react-toastify";
+import { fetchAllOrders, deleteOrder } from "../services/orderService";
+import { Link } from "react-router-dom";
 
 const pageSize = 10;
 
 export default function Orders() {
-  const [orders] = useState([
-    { id: 1, customer: "John Doe", total: 99.99, status: "Pending" },
-    { id: 2, customer: "Jane Smith", total: 149.99, status: "Shipped" },
-    { id: 3, customer: "Alice Johnson", total: 79.49, status: "Delivered" },
-    { id: 4, customer: "Bob Williams", total: 249.0, status: "Pending" },
-    { id: 5, customer: "Charlie Brown", total: 39.99, status: "Cancelled" },
-    { id: 6, customer: "Diana Prince", total: 180.75, status: "Shipped" },
-    { id: 7, customer: "Ethan Hunt", total: 210.2, status: "Delivered" },
-    { id: 8, customer: "Fiona Gallagher", total: 55.6, status: "Pending" },
-    { id: 9, customer: "George Martin", total: 320.1, status: "Shipped" },
-    { id: 10, customer: "Hannah Baker", total: 112.45, status: "Delivered" },
-    { id: 11, customer: "Ivan Petrov", total: 68.9, status: "Pending" },
-    { id: 12, customer: "Jack Reacher", total: 154.0, status: "Shipped" },
-    { id: 13, customer: "Karen Page", total: 87.3, status: "Delivered" },
-    { id: 14, customer: "Leo Zhang", total: 134.99, status: "Pending" },
-    { id: 15, customer: "Maria Lopez", total: 200.0, status: "Delivered" },
-  ]);
-
+  const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchAllOrders();
+        setOrders(data);
+      } catch (err) {
+        console.error("Failed to fetch orders:", err);
+        setError(err || "Something went wrong.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filtered = orders.filter(
     (order) =>
-      order.customer.toLowerCase().includes(search.toLowerCase()) ||
-      order.status.toLowerCase().includes(search.toLowerCase())
+      order.authId?.username?.toLowerCase().includes(search.toLowerCase()) ||
+      order.status?.toLowerCase().includes(search.toLowerCase())
   );
 
   const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
   const totalPages = Math.ceil(filtered.length / pageSize);
 
-  const getStatusBadge = (status) => {
-    const base = "inline-block px-2 py-1 text-xs font-medium rounded-full";
-    switch (status) {
-      case "Pending":
-        return `${base} bg-yellow-100 text-yellow-800`;
-      case "Shipped":
-        return `${base} bg-blue-100 text-blue-800`;
-      case "Delivered":
-        return `${base} bg-green-100 text-green-800`;
-      case "Cancelled":
-        return `${base} bg-red-100 text-red-800`;
-      default:
-        return base;
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      // Simulate status change (you can connect to backend later)
+      setOrders((prev) =>
+        prev.map((order) =>
+          order._id === id ? { ...order, status: newStatus } : order
+        )
+      );
+      toast.success(`Order #${id} status updated to ${newStatus}`);
+    } catch {
+      toast.error("Failed to update status.");
     }
   };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) return;
+
+    try {
+      await deleteOrder(id);
+      setOrders((prev) => prev.filter((order) => order._id !== id));
+      toast.success("Order deleted successfully.");
+    } catch (error) {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete order.");
+    }
+  };
+
+  if (loading) return <p className="text-center py-10">Loading orders...</p>;
+  if (error) return <p className="text-center text-red-500 py-10">{error}</p>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Manage Orders</h1>
+        <h1 className="text-2xl font-bold">All Orders</h1>
         <input
           type="text"
-          placeholder="Search orders..."
+          placeholder="Search by customer/status..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="border border-gray-300 px-3 py-1.5 rounded-md shadow-sm focus:ring focus:ring-blue-200 text-sm"
@@ -87,26 +105,52 @@ export default function Orders() {
           </thead>
           <tbody className="divide-y divide-gray-200">
             {paginated.map((order) => (
-              <tr key={order.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">{order.id}</td>
+              <tr key={order._id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap">{order._id}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {order.customer}
+                  {order.authId?.username || "Unknown"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  ${order.total.toFixed(2)}
+                  Kshs.{" "}
+                  {order.items
+                    ?.reduce(
+                      (sum, item) =>
+                        sum + (item.productId?.price || 0) * item.quantity,
+                      0
+                    )
+                    .toLocaleString()}
                 </td>
+
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={getStatusBadge(order.status)}>
-                    {order.status}
-                  </span>
+                  <select
+                    value={order.status}
+                    onChange={(e) =>
+                      handleStatusChange(order._id, e.target.value)
+                    }
+                    className="border rounded px-2 py-1 text-xs"
+                  >
+                    <option>Pending</option>
+                    <option>Shipped</option>
+                    <option>Delivered</option>
+                    <option>Cancelled</option>
+                  </select>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                  <button className="text-blue-600 hover:underline">
-                    View
-                  </button>
-                  <button className="text-green-600 hover:underline">
-                    Update
-                  </button>
+                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                    <Link
+                      to={`/admin/orders/${order._id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      View
+                    </Link>
+
+                    <button
+                      onClick={() => handleDelete(order._id)}
+                      className="text-red-600 hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </td>
               </tr>
             ))}
@@ -129,25 +173,27 @@ export default function Orders() {
         <p className="text-sm text-gray-600">
           Showing {paginated.length} of {filtered.length} orders
         </p>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <span className="text-sm font-medium">
-            Page {page} of {totalPages}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-            className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <span className="text-sm font-medium">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

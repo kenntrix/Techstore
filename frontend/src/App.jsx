@@ -21,6 +21,7 @@ import ProductItemsPage from "./pages/products/ProductItemsPage.jsx";
 import ProductPage from "./pages/products/ProductsPage.jsx";
 import OrderSuccessPage from "./pages/products/OrderSuccessPage.jsx";
 import OrderDetailsPage from "./pages/users/OrderDetailsPage.jsx";
+import AdminOrderDetailsPage from "./admin/components/AdminOrderDetails.jsx";
 
 // Admin pages
 import AdminLayout from "./admin/AdminLayout.jsx";
@@ -86,9 +87,20 @@ export default function App() {
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/users/edit-user/:id" element={<UpdateUserProfileByAdmin />} />
+          <Route
+            path="/admin/users/edit-user/:id"
+            element={<UpdateUserProfileByAdmin />}
+          />
           <Route path="/admin/products/add-product" element={<AddProduct />} />
           <Route path="/admin/update-product/:id" element={<UpdateProduct />} />
+          <Route
+            path="/admin/orders/:orderId"
+            element={<AdminOrderDetailsPage />}
+          />
+          <Route
+            path="/admin/orders/details"
+            element={<AdminOrderDetailsPage />}
+          />
         </Route>
         {/* </Route> */}
       </Routes>

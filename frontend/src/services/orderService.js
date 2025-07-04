@@ -25,3 +25,25 @@ export const fetchOrdersByID = async (orderId) => {
     throw error.response?.data?.message;
   }
 };
+
+export const fetchAllOrders = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/orders/`, {
+      withCredentials: true,
+    });
+    return response?.data?.orders || [];
+  } catch (error) {
+    throw error.response?.data?.message || "Failed to fetch all orders";
+  }
+};
+
+export const deleteOrder = async (orderId) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/orders/${orderId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Failed to delete order";
+  }
+};

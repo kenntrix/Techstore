@@ -23,11 +23,9 @@ const Products = () => {
     }
   };
 
-  // Delete
   const handleDelete = async (productId) => {
     if (!productId) return alert("Cannot delete unsaved product.");
-    if (!window.confirm("Are you sure you want to delete this product?"))
-      return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
       await deleteProduct(productId);
@@ -43,8 +41,8 @@ const Products = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
-      <div className="flex justify-between items-center mb-8 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-100 p-6 space-y-6 w-full">
+      <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">All Products</h1>
         <button
           onClick={() => navigate("/admin/products/add-product")}
@@ -57,7 +55,7 @@ const Products = () => {
       {products.length === 0 ? (
         <p className="text-center text-gray-500">No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {products.map((product) => (
             <div
               key={product._id}

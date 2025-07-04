@@ -15,6 +15,7 @@ router.post("/create-user-profile", verifyToken, createUserProfile);
 router.get("/getUserProfile/:authId", verifyToken, getUserProfileById);
 router.put("/update", verifyToken, updateUserProfile);
 router.delete("/delete/:id", verifyToken, deleteUserProfile);
-router.get("/getUsers", verifyToken, verifyAdmin, getAllUsers);
+router.get("/getUsers", verifyToken, getAllUsers);
+// router.get("/getUsers", verifyToken, verifyAdmin, getAllUsers);
 
 export default router;

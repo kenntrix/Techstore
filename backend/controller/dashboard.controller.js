@@ -57,7 +57,7 @@ export const getDashboardStats = async (request, response, next) => {
       recentOrders,
       topProducts,
     });
-  } catch (error) {
+  } catch (error) { 
     console.error("Dashboard stats error:", error);
     next(error);
   }

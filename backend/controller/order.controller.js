@@ -24,7 +24,7 @@ export const getOrderById = async (request, response, next) => {
 
     // Fetch the order by ID and populate related fields
     const order = await Order.findById(orderId)
-      .populate("authId") // Populate user details
+      .populate("authId", "username email") // Populate user details
       .populate("items.productId"); // Populate product details
 
     if (!order) return next(errorHandler(404, "Order not found"));
