@@ -6,19 +6,18 @@ import { Button } from "flowbite-react";
 import { Link } from "react-router-dom";
 
 const TopSellingSection = () => {
-  const [topSellingProducts, setTopSellingProducts] = useState([]); // State for top-selling products
-  const [loading, setLoading] = useState(false); // State for loading
+  const [topSellingProducts, setTopSellingProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch top-selling products from the backend API
   useEffect(() => {
     const loadTopSellingProducts = async () => {
       try {
         setLoading(true);
         const fetchedProducts = await fetchProducts({});
         setTopSellingProducts(fetchedProducts);
-        setLoading(false);
       } catch (err) {
         console.error("Failed to load top-selling products:", err);
+      } finally {
         setLoading(false);
       }
     };
@@ -27,36 +26,37 @@ const TopSellingSection = () => {
   }, []);
 
   return (
-    <div className="h-auto py-14 max-w-6xl mx-auto">
+    <div className="w-full py-14 px-4 sm:px-6 lg:px-8 bg-gray-50">
       {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
           <RingLoader color="#4A90E2" size={100} />
         </div>
       )}
 
-      <h2 className="text-4xl font-semibold text-center mb-6">Top Selling</h2>
+      <h2 className="text-4xl font-bold text-center mb-4">Top Selling</h2>
 
-      <p className="text-center text-gray-600 max-w-3xl mx-auto mb-8 text-lg">
+      <p className="text-center text-gray-600 max-w-3xl mx-auto mb-10 text-lg">
         Discover our most popular products that customers love the most. These
         top-selling items are selected based on customer purchases and
         satisfaction — trusted by hundreds of shoppers.
       </p>
+
       {topSellingProducts.length > 0 ? (
-        <div className="w-full py-6 px-2 sm:px-4 max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {topSellingProducts.slice(0, 12).map((item) => (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+            {topSellingProducts.slice(0, 8).map((item) => (
               <ProductCard key={item._id} item={item} />
             ))}
           </div>
 
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-10">
             <Link to="/products">
-              <Button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-400 transition duration-300">
+              <Button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
                 View All Products
               </Button>
             </Link>
           </div>
-        </div>
+        </>
       ) : (
         <p className="text-center text-gray-500 text-lg">
           No top-selling products found.
