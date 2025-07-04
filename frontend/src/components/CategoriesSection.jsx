@@ -36,9 +36,12 @@ const CategoriesSection = () => {
           Shop by Category
         </h2>
         <p className="text-center text-gray-600 mb-10 max-w-2xl mx-auto text-lg">
-          Browse our product categories to find exactly what you need — whether
-          it's phones, laptops, accessories, or charging gear. Start exploring
-          now!
+          Browse our diverse range of product categories to find exactly what
+          you need — whether it’s the latest smartphones, powerful laptops,
+          essential accessories, or reliable charging solutions. We’ve curated
+          collections to suit every lifestyle and budget, ensuring quality,
+          durability, and performance. Start exploring now and discover the
+          perfect tech for work, school, entertainment, or everyday use.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

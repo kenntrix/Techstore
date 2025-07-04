@@ -59,16 +59,11 @@ const OrderDetailsPage = () => {
           </div>
 
           {/* User Details */}
-          {/* <div className="border-b pb-4 mb-6">
-            <h3 className="font-semibold mb-2">User Information</h3>
-            <p>Name: {order.userId.username || "N/A"}</p>
-            <p>Email: {order.userId.email || "N/A"}</p>
-            
-          </div> */}
+         
           <div className="border-b pb-4 mb-6">
             <h3 className="font-semibold mb-2">User Information</h3>
-            <p>Name: {order.userId?.username || "N/A"}</p>
-            <p>Email: {order.userId?.email || "N/A"}</p>
+            <p>Name: {order.authId?.username || "N/A"}</p>
+            <p>Email: {order.authId?.email || "N/A"}</p>
           </div>
 
           {/* Order Items */}

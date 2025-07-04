@@ -37,8 +37,12 @@ const TopSellingSection = () => {
 
       <p className="text-center text-gray-600 max-w-3xl mx-auto mb-10 text-lg">
         Discover our most popular products that customers love the most. These
-        top-selling items are selected based on customer purchases and
-        satisfaction — trusted by hundreds of shoppers.
+        top-selling items are carefully selected based on real customer
+        purchases, reviews, and overall satisfaction — trusted by hundreds of
+        happy shoppers. Whether you're upgrading your tech, shopping for
+        essentials, or looking for reliable everyday gadgets, these bestsellers
+        combine quality, value, and performance. Join our community of satisfied
+        customers and shop with confidence today!
       </p>
 
       {topSellingProducts.length > 0 ? (
