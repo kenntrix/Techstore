@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../utils/verifyUser.js";
-import { verifyAdmin } from "../utils/verifyAdmin.js";
+// import { verifyAdmin } from "../utils/verifyAdmin.js";
 import {
   createUserProfile,
   deleteUserProfile,

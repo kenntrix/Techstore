@@ -16,7 +16,7 @@ const Products = () => {
     try {
       const data = await fetchProducts();
       setProducts(data);
-    } catch (err) {
+    } catch{
       toast.error("Failed to load products:");
     } finally {
       setLoading(false);
@@ -31,7 +31,7 @@ const Products = () => {
       await deleteProduct(productId);
       toast.success("Product deleted successfully.");
       setProducts((prev) => prev.filter((p) => p._id !== productId));
-    } catch (err) {
+    } catch{
       toast.error("Failed to delete product");
     }
   };
