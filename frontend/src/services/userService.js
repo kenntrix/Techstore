@@ -47,7 +47,7 @@ export const updateUserProfile = async (formData) => {
 //update user profile by admin
 export const updateUserProfileByAdmin = async (authId, userData) => {
   const response = await axios.put(
-    `${API_URL}/api/users/admin/users/${authId}`,
+    `${API_URL}/api/users/admin/user/${authId}`,
     userData,
     {
       withCredentials: true,

@@ -7,6 +7,7 @@ import {
   getAllUsers,
   getUserProfileById,
   updateUserProfile,
+  updateUserByAdmin,
 } from "../controller/user.controller.js";
 
 const router = express.Router();
@@ -14,6 +15,7 @@ const router = express.Router();
 router.post("/create-user-profile", verifyToken, createUserProfile);
 router.get("/getUserProfile/:authId", verifyToken, getUserProfileById);
 router.put("/update", verifyToken, updateUserProfile);
+router.put("/admin/user/:id", updateUserByAdmin);
 router.delete("/delete/:id", verifyToken, deleteUserProfile);
 router.get("/getUsers", verifyToken, getAllUsers);
 // router.get("/getUsers", verifyToken, verifyAdmin, getAllUsers);

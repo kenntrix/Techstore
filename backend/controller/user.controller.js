@@ -233,3 +233,32 @@ export const getAllUsers = async (request, response, next) => {
     next(errorHandler(500, "Error retrieving users from the database"));
   }
 };
+
+ // For admins to update any user by ID
+ export const updateUserByAdmin = async (request, response, next) => {
+  const { id } = request.params; // ID of the user being updated
+  const { username, email, role } = request.body;
+
+  try {
+    const updatedUser = await Auth.findByIdAndUpdate(
+      id,
+      { username, email, role },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    const { password, ...rest } = updatedUser._doc;
+
+    response.status(200).json({
+      success: true,
+      message: "User updated successfully by admin.",
+      user: rest,
+    });
+  } catch (error) {
+    console.log(error);
+    next(errorHandler(500, "Error updating user by admin."));
+  }
+};
