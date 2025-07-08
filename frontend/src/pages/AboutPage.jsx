@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       {/* Hero Banner */}
       <motion.div
-        className="relative mb-16"
+        className="relative"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
@@ -24,7 +24,6 @@ const About = () => {
 
       {/* Introduction */}
       <motion.section
-        className="mb-12"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -40,7 +39,6 @@ const About = () => {
 
       {/* Features Section */}
       <motion.section
-        className="mb-12"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
@@ -58,7 +56,6 @@ const About = () => {
 
       {/* Image Grid Section */}
       <motion.section
-        className="mb-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
@@ -104,7 +101,6 @@ const About = () => {
 
       {/* Vision Section */}
       <motion.section
-        className="mb-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ChargingImage from "../assets/images/products/laptop.jpg";
 import LaptopsImage from "../assets/images/products/desktop.jpg";
 import AccessoriesImage from "../assets/images/products/iphone.jpg";
-import PhoneImage from "../assets/images/products/lap.jpg";
+import PhoneImage from "../assets/images/products/apple.jpeg";
 
 const CategoriesSection = () => {
   const categories = [
