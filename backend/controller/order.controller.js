@@ -65,17 +65,28 @@ export const getOrdersByUserId = async (request, response, next) => {
 export const updateOrderStatus = async (request, response, next) => {
   try {
     const { status } = request.body;
+
     const updatedOrder = await Order.findByIdAndUpdate(
-      req.params.id,
+      request.params.id,
       { status },
       { new: true, runValidators: true }
     );
-    if (!updatedOrder) return next(errorHandler(404, "Order not found"));
-    response.json(updatedOrder);
+
+    if (!updatedOrder) {
+      return next(errorHandler(404, "Order not found"));
+    }
+
+    response.status(200).json({
+      success: true,
+      message: "Order status updated successfully.",
+      order: updatedOrder,
+    });
   } catch (error) {
+    console.error("Error updating order status:", error);
     next(errorHandler(500, "Error updating order status"));
   }
 };
+
 
 // Delete an order
 export const deleteOrder = async (request, response, next) => {

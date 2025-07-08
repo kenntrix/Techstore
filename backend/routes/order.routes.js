@@ -20,7 +20,7 @@ router.get("/:id", verifyToken, getOrderById);
 router.get("/user/:authId", verifyToken, getOrdersByUserId);
 
 // Update order status
-router.put("/:id/status", updateOrderStatus);
+router.patch("/:id/status", updateOrderStatus);
 
 // Delete an order
 router.delete("/:id", deleteOrder);
