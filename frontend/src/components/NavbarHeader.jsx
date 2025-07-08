@@ -111,7 +111,7 @@ const NavbarHeader = () => {
             </Link>
             {!currentUser && (
               <>
-              <Link to="/About" className={navLinkClass("/about")}>
+                <Link to="/About" className={navLinkClass("/about")}>
                   About
                 </Link>
                 <Link to="/login" className={navLinkClass("/login")}>
@@ -233,7 +233,9 @@ const CartDropdown = ({ cartItems, handleRemoveItem }) => {
             </div>
             <div className="w-1/2 flex flex-col text-left">
               <h3 className="font-semibold">{product.name}</h3>
-              <p className="text-gray-500">Kshs. {product.price.toLocaleString()}</p>
+              <p className="text-gray-500">
+                Kshs. {product.price.toLocaleString()}
+              </p>
             </div>
             <div className="w-1/4 flex justify-center">
               <span
@@ -304,12 +306,6 @@ const UserDropdown = ({ handleSignout, currentUser }) => {
       </Dropdown.Header>
       {currentUser && (
         <>
-          <Link to="/track-orders">
-            <Dropdown.Item className="flex item-center px-2 py-4">
-              <FaTruck className="mx-4 h-5 w-5" />
-              Track your Order
-            </Dropdown.Item>
-          </Link>
           <Link to="/my-orders">
             <Dropdown.Item className="flex item-center px-2 py-4">
               <LuPackage className="mx-4 h-5 w-5" />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "react-toastify";
-import { fetchAllOrders, deleteOrder } from "../services/orderService";
+import { fetchAllOrders, deleteOrder, updateOrderStatus } from "../services/orderService";
 import { Link } from "react-router-dom";
 
 const pageSize = 10;
@@ -40,18 +40,22 @@ export default function Orders() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      // Simulate status change (you can connect to backend later)
+      // Update status in the backend
+      const updated = await updateOrderStatus(id, newStatus);
+
+      // Then update the local state
       setOrders((prev) =>
         prev.map((order) =>
-          order._id === id ? { ...order, status: newStatus } : order
+          order._id === id ? { ...order, status: updated.order.status } : order
         )
       );
+
       toast.success(`Order #${id} status updated to ${newStatus}`);
-    } catch {
+    } catch (error) {
       toast.error("Failed to update status.");
+      console.error("Status update failed:", error);
     }
   };
-
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
 
@@ -130,9 +134,9 @@ export default function Orders() {
                     className="border rounded px-2 py-1 text-xs"
                   >
                     <option>Pending</option>
+                    <option>Processing</option>
                     <option>Shipped</option>
                     <option>Delivered</option>
-                    <option>Cancelled</option>
                   </select>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap space-x-2">

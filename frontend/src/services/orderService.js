@@ -37,6 +37,19 @@ export const fetchAllOrders = async () => {
   }
 };
 
+export const updateOrderStatus = async (id, newStatus) => {
+  try {
+    const response = await axios.patch(
+      `${API_URL}/api/orders/${id}/status`,
+      { status: newStatus },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Failed to update order status.";
+  }
+};
+
 export const deleteOrder = async (orderId) => {
   try {
     const response = await axios.delete(`${API_URL}/api/orders/${orderId}`, {
