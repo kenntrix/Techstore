@@ -4,6 +4,7 @@ import { errorHandler } from "../utils/error.js";
 import Auth from "../models/auth.models.js";
 import UserProfile from "../models/user.models.js";
 
+//register new customer
 export const signup = async (request, response, next) => {
   try {
     const { username, email, password } = request.body;
@@ -42,6 +43,7 @@ export const signup = async (request, response, next) => {
   }
 };
 
+//signin
 export const signin = async (request, response, next) => {
   const { email, password } = request.body;
 
@@ -76,6 +78,7 @@ export const signin = async (request, response, next) => {
   }
 };
 
+//signout
 export const signout = (request, response, next) => {
   try {
     response

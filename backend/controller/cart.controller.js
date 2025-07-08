@@ -2,7 +2,7 @@ import Cart from "../models/cart.models.js";
 import Product from "../models/product.models.js";
 import { errorHandler } from "../utils/error.js";
 
-// Add to cart
+// Add product to cart
 export const addToCart = async (request, response, next) => {
   try {
     const { productId, quantity } = request.body;
@@ -92,7 +92,7 @@ export const updateCartItem = async (request, response, next) => {
       await cart.save();
       response
         .status(200)
-        .json({ success: true, message: "Cart updated succefully", cart });
+        .json({ success: true, message: "Cart updated successfully", cart });
     } else {
       next(errorHandler(404, "Item not found in cart"));
     }

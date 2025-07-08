@@ -4,6 +4,7 @@ import Order from "../models/order.models.js";
 import Product from "../models/product.models.js";
 import User from "../models/user.models.js";
 
+//dashboard
 export const getDashboardStats = async (request, response, next) => {
   try {
     // Fetch data from the database

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000";
 
+//login
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(
@@ -24,6 +25,7 @@ export const loginUser = async (email, password) => {
   }
 };
 
+//logout
 export const logoutUser = async () => {
   try {
     const response = await axios.post(
@@ -38,6 +40,7 @@ export const logoutUser = async () => {
   }
 };
 
+//register new user
 export const registerUser = async (formData) => {
   try {
     const response = await axios.post(`${API_URL}/api/auth/signup`, formData);
@@ -47,6 +50,8 @@ export const registerUser = async (formData) => {
   }
 };
 
+
+//update existing user
 export const updateUser = async (formData) => {
   try {
     const response = await axios.put(`${API_URL}/api/auth/update`, formData, {

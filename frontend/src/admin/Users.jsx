@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchAllUsers, deleteUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { toast } from "react-toastify";
 
 export default function Users() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Users() {
       try {
         const data = await fetchAllUsers();
         setUsers(data.users);
-      } catch (err) {
+      } catch{
         setError("Failed to load users.");
       } finally {
         setLoading(false);
@@ -59,11 +60,11 @@ export default function Users() {
     try {
       await deleteUser(id);
       setUsers((prev) => prev.filter((user) => user._id !== id));
+      toast.success("User deleted successfully.");
     } catch (err) {
-      alert(err.message || "Delete failed.");
+      toast.error(err.message || "Delete failed.");
     }
   };
-
   if (loading) return <p className="text-center py-10">Loading users...</p>;
   if (error) return <p className="text-center text-red-500 py-10">{error}</p>;
 

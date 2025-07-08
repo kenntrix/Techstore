@@ -42,8 +42,8 @@ export const getOrdersByUserId = async (request, response, next) => {
 
     // Fetch all orders for the given user ID
     const orders = await Order.find({ authId })
-      .populate("authId") // Populate user details
-      .populate("items.productId"); // Populate product details in the order items
+      .populate("authId")
+      .populate("items.productId");
 
     if (!orders || orders.length === 0) {
       return next(errorHandler(404, "No orders found for this user"));

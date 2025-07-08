@@ -44,19 +44,26 @@ export const updateUserProfile = async (formData) => {
   }
 };
 
-//update user profile by admin
-export const updateUserProfileByAdmin = async (authId, userData) => {
-  const response = await axios.put(
-    `${API_URL}/api/users/admin/user/${authId}`,
-    userData,
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-  return response.data;
+// Update user profile by admin
+export const updateUserProfileByAdmin = async (authId, formData) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/api/users/admin/user/${authId}`,
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+
+    throw new Error(
+      error.response?.data?.message || "Failed to update user profile by admin."
+    );
+  }
 };
 
 //delete user

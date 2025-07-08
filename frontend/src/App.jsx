@@ -13,7 +13,6 @@ import NavbarHeader from "./components/NavbarHeader.jsx";
 import OnlyUserPrivateRoute from "./components/OnlyUserPrivateRoute.jsx";
 import OrdersPage from "./pages/users/OrdersPage.jsx";
 import UserProfilePage from "./pages/users/UserProfilePage.jsx";
-import TrackOrder from "./pages/users/TrackOrder.jsx";
 import CheckoutPage from "./pages/products/CheckoutPage.jsx";
 import FooterSection from "./components/FooterSection.jsx";
 import CartPage from "./pages/products/CartPage.jsx";
@@ -75,7 +74,6 @@ export default function App() {
               path="/product/order-success"
               element={<OrderSuccessPage />}
             />
-            <Route path="/track-orders" element={<TrackOrder />} />
             <Route path="/user-profile" element={<UserProfilePage />} />
           </Route>
         </Route>

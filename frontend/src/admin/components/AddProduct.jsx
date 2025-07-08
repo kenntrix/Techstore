@@ -11,7 +11,7 @@ function ProductForm() {
     price: "",
     stock: "",
     category: "Laptops",
-    images: [], // Initialized as empty array
+    images: [],
   });
 
   const handleChange = (e) => {
@@ -50,7 +50,7 @@ function ProductForm() {
       price: formData.price,
       stock: formData.stock,
       category: formData.category,
-      images: formData.images, // Already cloudinary URLs
+      images: formData.images,
     };
 
     try {

@@ -11,7 +11,7 @@ import {
   X,
   LogOut,
 } from "lucide-react";
-import { signUpSuccess } from "../redux/reducers/authSlice"; // adjust path if needed
+import { signUpSuccess } from "../redux/reducers/authSlice"; 
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     dispatch(signUpSuccess());
-    localStorage.removeItem("persist:root"); // clear persisted Redux state (if used)
+    localStorage.removeItem("persist:root"); 
     navigate("/login");
   };
 

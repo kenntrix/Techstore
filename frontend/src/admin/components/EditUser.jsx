@@ -5,7 +5,6 @@ import {
   fetchUserProfile,
   updateUserProfileByAdmin,
 } from "../../services/userService";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function EditUser() {
   const { id } = useParams();
@@ -22,18 +21,24 @@ export default function EditUser() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const data = await fetchUserProfile(id);
+        const result = await fetchUserProfile(id);
+
+        const auth = result.authId || result.data?.authId || {}; // support multiple shapes
+
         setForm({
-          username: data?.username ?? "",
-          email: data?.email ?? "",
-          role: data?.role ?? "user",
+          username: auth.username || "",
+          email: auth.email || "",
+          role: auth.role || "user",
         });
+
         setLoading(false);
       } catch (err) {
+        console.error("Failed to load user:", err);
         toast.error("Failed to load user.");
         navigate("/admin/users");
       }
     };
+    
 
     loadUser();
   }, [id, navigate]);
@@ -45,42 +50,45 @@ export default function EditUser() {
   const handleUpdate = async () => {
     try {
       await updateUserProfileByAdmin(id, form);
-      toast.success("User updated successfully");
+      toast.success("User updated successfully.");
       navigate("/admin/users");
     } catch (err) {
-      toast.error(err.message || "Failed to update user");
+      toast.error(err.message || "Failed to update user.");
     }
   };
 
-  if (loading) return <p className="p-4">Loading...</p>;
+  if (loading)
+    return <p className="text-center py-10">Loading user details...</p>;
 
   return (
-    <div className="max-w-xl mx-auto mt-8 space-y-4 bg-white p-6 shadow rounded">
-      <h1 className="text-2xl font-bold mb-4">Edit User</h1>
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded space-y-4">
+      <h1 className="text-2xl font-bold">Edit User</h1>
 
       <input
         type="text"
         name="username"
         value={form.username}
         onChange={handleChange}
+        className="w-full px-3 py-2 border rounded"
         placeholder="Username"
-        className="w-full border px-3 py-2 rounded"
       />
+
       <input
         type="email"
         name="email"
         value={form.email}
         onChange={handleChange}
+        className="w-full px-3 py-2 border rounded"
         placeholder="Email"
-        className="w-full border px-3 py-2 rounded"
       />
+
       <select
         name="role"
         value={form.role}
         onChange={handleChange}
-        className="w-full border px-3 py-2 rounded"
+        className="w-full px-3 py-2 border rounded"
       >
-        <option value="user">Customer</option>
+        <option value="user">User</option>
         <option value="admin">Admin</option>
       </select>
 

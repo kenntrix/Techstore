@@ -4,6 +4,7 @@ import Product from "../models/product.models.js";
 import { errorHandler } from "../utils/error.js";
 import stripe from "../utils/stripe.js";
 
+//payment
 export const createPayment = async (request, response, next) => {
   try {
     const { items, total_price } = request.body;

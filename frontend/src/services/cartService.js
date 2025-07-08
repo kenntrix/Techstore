@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000";
 
+//fetch user cart
 export const fetchUserCart = async (authId) => {
   try {
     const response = await axios.get(`${API_URL}/api/cart/${authId}`, {
@@ -14,6 +15,7 @@ export const fetchUserCart = async (authId) => {
   }
 };
 
+//add item to cart
 export const addToCart = async (productId, quantity) => {
   try {
     const response = await axios.post(
@@ -30,31 +32,31 @@ export const addToCart = async (productId, quantity) => {
   }
 };
 
-// Service to remove an item from the cart
+// remove an item from the cart
 export const removeItemFromCart = async ({ productId }) => {
   try {
     const response = await axios.delete(`${API_URL}/api/cart/remove`, {
-      data: { productId }, // Send productId in the request body
-      withCredentials: true, // Include cookies for authentication
+      data: { productId },
+      withCredentials: true, 
     });
 
-    return response.data; // Return the response data
+    return response.data;
   } catch (error) {
-    // Throw a meaningful error message if the request fails
+
     throw error.response?.data?.message || "Failed to remove item from cart.";
   }
 };
 
-// Service to remove an item from the cart
+// clear all items from cart
 export const clearCart = async (authId) => {
   try {
     const response = await axios.delete(`${API_URL}/api/cart/clear/${authId}`, {
-      withCredentials: true, // Include cookies for authentication
+      withCredentials: true, 
     });
 
-    return response.data; // Return the response data
+    return response.data;
   } catch (error) {
-    // Throw a meaningful error message if the request fails
+
     throw error.response?.data?.message || "Failed to remove item from cart.";
   }
 };

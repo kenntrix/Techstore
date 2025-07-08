@@ -14,6 +14,7 @@ export const fetchOrdersByUserID = async (authId) => {
   }
 };
 
+//fetch orders by ID
 export const fetchOrdersByID = async (orderId) => {
   try {
     const response = await axios.get(`${API_URL}/api/orders/${orderId}`, {
@@ -26,6 +27,7 @@ export const fetchOrdersByID = async (orderId) => {
   }
 };
 
+//fetch all orders
 export const fetchAllOrders = async () => {
   try {
     const response = await axios.get(`${API_URL}/api/orders/`, {
@@ -37,6 +39,7 @@ export const fetchAllOrders = async () => {
   }
 };
 
+//update order status
 export const updateOrderStatus = async (id, newStatus) => {
   try {
     const response = await axios.patch(
@@ -50,6 +53,7 @@ export const updateOrderStatus = async (id, newStatus) => {
   }
 };
 
+//delete order
 export const deleteOrder = async (orderId) => {
   try {
     const response = await axios.delete(`${API_URL}/api/orders/${orderId}`, {

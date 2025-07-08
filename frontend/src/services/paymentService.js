@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000";
 
+//create payments
 export const createPayments = async (paymentPayload) => {
   try {
     const response = await axios.post(
