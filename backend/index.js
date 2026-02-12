@@ -12,12 +12,8 @@ import paymentRoutes from "./routes/payment.routes.js";
 // <<<<<<< HEAD
 import authRoutes from "./routes/auth.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js"
-// =======
-// =======
 
 // Load environment variables at the beginning
-// >>>>>>> 37fb385 (Update changes)
-// >>>>>>> 4f09eea (Update changes)
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;

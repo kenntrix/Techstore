@@ -34,7 +34,7 @@ export const fetchProducts = async (filters = {}) => {
   }
 };
 
-//fetch procuct by Id
+//fetch product by Id
 export const fetchProductsByID = async (productID) => {
   try {
     const response = await axios.get(`${API_URL}/api/products/${productID}`);
